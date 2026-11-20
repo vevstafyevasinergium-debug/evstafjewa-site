@@ -374,29 +374,35 @@ html.lock{overflow:hidden}
 }
 @media (min-width:1021px) and (max-height:760px){.side .hero-txt p{display:none}}
 
-/* ============ ПРОГРЕСС: БЕГУЩАЯ ТАКСА ============ */
-body{padding-bottom:40px}
-.walk{position:fixed;left:0;right:0;bottom:0;height:46px;z-index:60;pointer-events:none}
-.walk .track{position:absolute;left:12px;right:12px;bottom:8px;height:3px;border-radius:3px;background:repeating-linear-gradient(90deg,rgba(242,122,174,.35) 0 8px,transparent 8px 14px)}
-.walk .fill{position:absolute;left:12px;bottom:8px;height:3px;border-radius:3px;width:calc((100% - 24px) * var(--p,0));background:linear-gradient(90deg,#ffc6de,#f27aae);box-shadow:0 0 8px rgba(242,122,174,.5)}
-.walk .dog{position:absolute;bottom:9px;left:calc(12px + (100% - 24px - 64px) * var(--p,0));width:64px;height:34px}
-.walk .dog svg{width:64px;height:34px;display:block;overflow:visible;transition:transform .25s}
-.walk.back .dog svg{transform:scaleX(-1)}
-.walk .leg{transform-box:fill-box;transform-origin:50% 0}
-.walk.moving .leg.a{animation:legA .32s linear infinite}
-.walk.moving .leg.b{animation:legB .32s linear infinite}
-.walk.moving .body{animation:bounce .16s ease-in-out infinite alternate}
-.walk .tail{transform-box:fill-box;transform-origin:100% 100%;animation:wag .5s ease-in-out infinite alternate}
-.walk.moving .ear{animation:flap .16s ease-in-out infinite alternate}
-.walk .ear{transform-box:fill-box;transform-origin:50% 0}
-@keyframes legA{0%,100%{rotate:28deg}50%{rotate:-28deg}}
-@keyframes legB{0%,100%{rotate:-28deg}50%{rotate:28deg}}
-@keyframes bounce{to{translate:0 -1.5px}}
-@keyframes wag{from{rotate:-12deg}to{rotate:18deg}}
-@keyframes flap{to{rotate:14deg}}
-.walk .bubble{position:absolute;bottom:40px;left:calc(12px + (100% - 24px - 64px) * var(--p,0) + 56px);translate:-100% 0;font-size:11px;font-weight:800;color:#f27aae;background:var(--card);border-radius:99px;padding:3px 8px;box-shadow:0 2px 10px rgba(0,0,0,.1);opacity:0;transition:opacity .3s;white-space:nowrap}
-.walk.done .bubble{opacity:1}
-@media (prefers-reduced-motion:reduce){.walk .dog{transition:none}}
+/* ============ ПРОГРЕСС: ОБЕЗЬЯНКА НА ЛИАНЕ ============ */
+@media (min-width:1021px){.page{padding-right:46px}}
+.vine{position:fixed;top:0;right:6px;width:40px;height:100vh;z-index:60;pointer-events:none}
+.vine .rope{position:absolute;left:19px;top:0;width:3px;height:100%;border-radius:3px;background:repeating-linear-gradient(to bottom,rgba(242,122,174,.35) 0 7px,transparent 7px 12px)}
+.vine .done{position:absolute;left:18px;top:0;width:5px;height:calc((100% - 60px) * var(--p,0) + 6px);border-radius:0 0 4px 4px;background:linear-gradient(#ffc6de,#f27aae);box-shadow:0 0 8px rgba(242,122,174,.45)}
+.vine .leaf{position:absolute;left:21px;width:10px;height:6px;border-radius:0 10px 0 10px;background:#ffb3d4;opacity:.7}
+.vine .leaf:nth-of-type(odd){left:10px;border-radius:10px 0 10px 0}
+.vine .mk{position:absolute;left:0;top:calc((100% - 60px) * var(--p,0));width:40px;height:56px}
+.vine .mk svg{width:40px;height:56px;display:block;overflow:visible}
+.vine .mk .all{transform-box:view-box;transform-origin:20px 4px;animation:mkSway 2.6s ease-in-out infinite}
+.vine.moving .mk .all{animation-duration:.5s}
+.vine .arm{transform-box:fill-box;transform-origin:50% 100%}
+.vine.moving .arm.l{animation:armL .36s linear infinite}
+.vine.moving .arm.r{animation:armR .36s linear infinite}
+.vine .leg{transform-box:fill-box;transform-origin:50% 0}
+.vine.moving .leg.l{animation:legL .36s linear infinite}
+.vine.moving .leg.r{animation:legR .36s linear infinite}
+.vine .tail{transform-box:fill-box;transform-origin:0 0;animation:tailC 1.2s ease-in-out infinite alternate}
+.vine .eye{transform-box:fill-box;transform-origin:center;animation:blink 4s infinite}
+@keyframes mkSway{0%,100%{rotate:-5deg}50%{rotate:5deg}}
+@keyframes armL{0%,100%{translate:0 0}50%{translate:0 5px}}
+@keyframes armR{0%,100%{translate:0 5px}50%{translate:0 0}}
+@keyframes legL{0%,100%{rotate:15deg}50%{rotate:-15deg}}
+@keyframes legR{0%,100%{rotate:-15deg}50%{rotate:15deg}}
+@keyframes tailC{to{rotate:-25deg}}
+@keyframes blink{0%,94%,100%{scale:1 1}97%{scale:1 .1}}
+.vine .bubble{position:absolute;right:42px;top:calc((100% - 60px) * var(--p,0) + 14px);font-size:11px;font-weight:800;color:#f27aae;background:var(--card);border-radius:99px;padding:4px 9px;box-shadow:0 2px 10px rgba(0,0,0,.1);white-space:nowrap;opacity:0;transition:opacity .3s}
+.vine.end .bubble{opacity:1}
+@media (max-width:1020px){.vine{right:-4px;scale:.8;transform-origin:top right}.vine .rope,.vine .leaf{opacity:.5}}
 
 /* ============ ТОРШЕР И ТЁМНАЯ ТЕМА ============ */
 .brand-row{display:flex;align-items:center;gap:6px}
@@ -637,25 +643,26 @@ footer{grid-column:2;display:flex;justify-content:space-between;padding:22px 8px
     <footer class="foot"><span>© 2026 Виктория Евстафьева</span><a href="#top">Наверх ↑</a></footer>
 </div>
 
-<div class="walk" id="walk" aria-hidden="true">
-  <i class="track"></i><i class="fill"></i>
-  <div class="dog"><svg viewBox="0 0 64 34">
-    <g class="tail"><path d="M10 15 Q3 10 4 4" stroke="#f27aae" stroke-width="3" stroke-linecap="round" fill="none"/></g>
-    <g class="leg b"><rect x="13" y="20" width="4" height="10" rx="2" fill="#e8649e"/></g>
-    <g class="leg a"><rect x="41" y="20" width="4" height="10" rx="2" fill="#e8649e"/></g>
-    <g class="body">
-      <rect x="8" y="11" width="42" height="13" rx="6.5" fill="#ff9cc8"/>
-      <rect x="20" y="13" width="14" height="9" rx="4" fill="#ffd0e4"/>
-      <path d="M44 13 Q48 3 56 6 Q62 9 60 15 Q58 19 51 18 Z" fill="#ff9cc8"/>
-      <circle cx="61" cy="14" r="2" fill="#4a2335"/>
-      <circle cx="54" cy="10" r="1.4" fill="#4a2335"/>
-      <g class="ear"><path d="M47 7 Q44 6 44 15 Q47 17 49 11 Z" fill="#e8649e"/></g>
-      <path d="M44 13 Q47 21 50 16" stroke="#7a5ea8" stroke-width="2" fill="none"/>
-    </g>
-    <g class="leg a"><rect x="17" y="20" width="4" height="10" rx="2" fill="#ff9cc8"/></g>
-    <g class="leg b"><rect x="45" y="20" width="4" height="10" rx="2" fill="#ff9cc8"/></g>
-  </svg></div>
-  <span class="bubble">Гав! Это конец 🐾</span>
+<div class="vine" id="vine" aria-hidden="true">
+  <i class="rope"></i><i class="leaf" style="top:6%"></i><i class="leaf" style="top:17%"></i><i class="leaf" style="top:28%"></i><i class="leaf" style="top:39%"></i><i class="leaf" style="top:50%"></i><i class="leaf" style="top:61%"></i><i class="leaf" style="top:72%"></i><i class="leaf" style="top:83%"></i><i class="leaf" style="top:94%"></i><i class="done"></i>
+  <div class="mk"><svg viewBox="0 0 40 56"><g class="all">
+    <g class="arm l"><path d="M14 22 Q13 10 18 4" stroke="#f27aae" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="18.5" cy="4" r="2.6" fill="#ffc6de"/></g>
+    <g class="arm r"><path d="M26 22 Q27 10 22 4" stroke="#f27aae" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="21.5" cy="4" r="2.6" fill="#ffc6de"/></g>
+    <g class="tail"><path d="M24 40 Q36 42 35 32 Q34 26 29 29" stroke="#e8649e" stroke-width="3" stroke-linecap="round" fill="none"/></g>
+    <g class="leg l"><path d="M16 40 Q14 47 12 51" stroke="#f27aae" stroke-width="4" stroke-linecap="round" fill="none"/></g>
+    <g class="leg r"><path d="M24 40 Q26 47 28 51" stroke="#f27aae" stroke-width="4" stroke-linecap="round" fill="none"/></g>
+    <ellipse cx="20" cy="33" rx="8" ry="9" fill="#ff9cc8"/>
+    <ellipse cx="20" cy="35" rx="4.5" ry="5.5" fill="#ffd6e7"/>
+    <circle cx="10.5" cy="19" r="4" fill="#ff9cc8"/><circle cx="10.5" cy="19" r="2.2" fill="#ffd6e7"/>
+    <circle cx="29.5" cy="19" r="4" fill="#ff9cc8"/><circle cx="29.5" cy="19" r="2.2" fill="#ffd6e7"/>
+    <circle cx="20" cy="20" r="9" fill="#ff9cc8"/>
+    <path d="M13.5 21 Q13 15 17 15 Q20 16.5 23 15 Q27 15 26.5 21 Q26 27 20 27 Q14 27 13.5 21 Z" fill="#ffd6e7"/>
+    <ellipse class="eye" cx="17.3" cy="19.2" rx="1.3" ry="1.6" fill="#3d1a2b"/>
+    <ellipse class="eye" cx="22.7" cy="19.2" rx="1.3" ry="1.6" fill="#3d1a2b"/>
+    <path d="M17.5 23.5 Q20 25.5 22.5 23.5" stroke="#c2477d" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+    <circle cx="15.2" cy="22.5" r="1.3" fill="#ff7fb0" opacity=".6"/><circle cx="24.8" cy="22.5" r="1.3" fill="#ff7fb0" opacity=".6"/>
+  </g></svg></div>
+  <span class="bubble">У-у-а! Это конец 🍌</span>
 </div>
 
 <div class="case" id="case" role="dialog" aria-modal="true" aria-labelledby="caseTitle" hidden>
@@ -1257,21 +1264,20 @@ lamp.addEventListener("click", () => {
 });
 try { if (localStorage.getItem("ve-theme") === "dark") setTheme(true, false); } catch (e) {}
 
-/* ---------- Прогресс: такса бежит, пока листаешь всю страницу ---------- */
+/* ---------- Прогресс: обезьянка спускается по лиане до конца страницы ---------- */
 (function () {
-  const w = document.getElementById("walk");
-  let last = scrollY, t = null, raf = 0;
+  const v = document.getElementById("vine");
+  let t = null, raf = 0;
   function upd() {
     raf = 0;
     const max = document.documentElement.scrollHeight - innerHeight;
     const p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
-    w.style.setProperty("--p", p.toFixed(4));
-    w.classList.toggle("done", p > .995);
+    v.style.setProperty("--p", p.toFixed(4));
+    v.classList.toggle("end", p > .995);
   }
   addEventListener("scroll", () => {
-    w.classList.toggle("back", scrollY < last); last = scrollY;
     if (!raf) raf = requestAnimationFrame(upd);
-    w.classList.add("moving"); clearTimeout(t); t = setTimeout(() => w.classList.remove("moving"), 180);
+    v.classList.add("moving"); clearTimeout(t); t = setTimeout(() => v.classList.remove("moving"), 200);
   }, { passive: true });
   addEventListener("resize", upd); new ResizeObserver(upd).observe(document.body); upd();
 })();

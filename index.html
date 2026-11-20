@@ -516,7 +516,7 @@ footer{grid-column:2;display:flex;justify-content:space-between;padding:22px 8px
       <div class="game-top">
         <div>
           <h2 id="gameTitle">Найди ту, что отличается</h2>
-          <p>Одна из этих голов подмигивает. Наводи курсор на головы, чтобы рассмотреть, и кликни на неё. Стрелки и Enter тоже работают.</p>
+          <p>Одна из этих голов подмигивает — найди её как можно быстрее. Время пошло, как только поле появилось на экране.</p>
         </div>
         <div class="game-ctrl">
           <span class="timer" id="timer">0.0 сек</span>
@@ -1136,7 +1136,7 @@ const field = document.getElementById("field");
 const statusEl = document.getElementById("status");
 const timerEl = document.getElementById("timer");
 const winEl = document.getElementById("win");
-let started = 0, found = false, tick = null, lastCols = 0;
+let started = 0, found = false, tick = null, lastCols = 0, fieldVisible = false;
 
 function newGame() {
   field.innerHTML = ""; statusEl.textContent = ""; found = false;
@@ -1158,6 +1158,8 @@ function newGame() {
   }
   started = 0; timerEl.textContent = "0.0 сек";
   clearInterval(tick);
+  // если поле уже на экране — время идёт сразу, без ожидания касания
+  if (fieldVisible) startClock();
 }
 function startClock() {
   if (started || found) return;
@@ -1183,6 +1185,11 @@ function pick(b) {
   }
 }
 
+/* Таймер стартует, как только поле игры видно на экране (на телефоне касаний «до клика» нет) */
+new IntersectionObserver(([e]) => {
+  fieldVisible = e.isIntersecting;
+  if (fieldVisible) startClock();
+}, { threshold: 0.35 }).observe(field);
 field.addEventListener("pointerdown", startClock);
 field.addEventListener("pointerover", startClock);
 addEventListener("resize", () => {

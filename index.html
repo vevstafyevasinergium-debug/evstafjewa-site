@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Виктория Евстафьева — дизайн и AI-контент</title>
+<meta name="description" content="Портфолио графического дизайнера и AI-креатора: интерфейсы, презентации, визуальные концепции, персонажи и AI-контент.">
+<meta name="theme-color" content="#f3f2ee">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ БАЗА ============ */
+:root{
+  --bg:#f3f2ee;
+  --card:#ffffff;
+  --soft:#eae8e2;
+  --ink:#1d1d1b;
+  --muted:#77756f;
+  --line:#e2e0da;
+  --accent:#6f8a2e;          /* оливковая точка, как на текущем сайте */
+  --r:28px;
+  --gap:14px;
+  --ease-pop:cubic-bezier(.34,1.56,.64,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Manrope",system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.45}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+img{display:block;max-width:100%}
+
+.page{display:grid;grid-template-columns:minmax(320px,400px) 1fr;gap:var(--gap);max-width:1480px;margin:0 auto;padding:var(--gap)}
+
+/* ============ ЛЕВАЯ КОЛОНКА ============ */
+/* Колонка едет вместе со страницей и «прилипает», когда показала низ (top считает скрипт) */
+.side{position:sticky;top:var(--gap);align-self:start;display:flex;flex-direction:column;gap:var(--gap)}
+.side>*{flex-shrink:0}
+.box{background:var(--card);border-radius:var(--r);padding:24px}
+.label{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:12px}
+
+/* Карточка с головами */
+.hero{padding:0;overflow:hidden;position:relative}
+.heads{position:relative;aspect-ratio:1/1;background:#fff;cursor:pointer;overflow:hidden;user-select:none;-webkit-tap-highlight-color:transparent}
+/* rig — поворачивается за курсором; .h — появляется/улетает; img — «дышит» */
+.heads .rig{position:absolute;inset:0;will-change:transform}
+.heads .h{position:absolute;inset:9% 9% 5%;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none}
+.heads .h img,.heads .h svg{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 18px 22px rgba(60,40,30,.18))}
+/* пролёт: голова влетает из-за одного края, зависает в центре и улетает за противоположный */
+.heads .h.on{opacity:1;animation:flyIn .85s cubic-bezier(.15,.85,.3,1.08) both}
+.heads .h.on img,.heads .h.on svg{animation:breathe 4.2s ease-in-out .85s infinite}
+.heads .h.out{opacity:1;animation:flyOut .7s cubic-bezier(.55,0,.85,.35) both}
+@keyframes flyIn{
+  0%{transform:translate(var(--fx),var(--fy)) rotate(var(--fr)) scale(.85)}
+  100%{transform:none}}
+@keyframes flyOut{
+  0%{transform:none}
+  100%{transform:translate(var(--tx),var(--ty)) rotate(var(--tr)) scale(.85)}}
+.heads .tap{position:absolute;left:50%;bottom:14px;z-index:2;translate:-50% 0;font-size:12px;font-weight:600;color:var(--muted);background:rgba(255,255,255,.75);backdrop-filter:blur(6px);border-radius:99px;padding:5px 11px;opacity:0;transition:opacity .3s}
+.heads:hover .tap{opacity:1}
+.dots{position:absolute;right:16px;top:20px;display:flex;gap:5px}
+.dots i{width:6px;height:6px;border-radius:9px;background:#e2e0da;transition:width .3s,background .3s}
+.dots i.on{width:18px;background:var(--ink)}
+.hero-txt{padding:22px 24px 24px}
+.hero-txt .role{font-size:13px;font-weight:600;color:var(--muted)}
+.hero-txt h1{font-size:34px;line-height:1.02;letter-spacing:-.03em;font-weight:700;margin:6px 0 12px}
+.hero-txt h1 b{color:var(--accent)}
+.hero-txt p{font-size:15px;color:#4a4945}
+.hero-txt .loc{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;color:var(--muted)}
+.hero-txt .loc svg{width:16px;height:16px;flex:none}
+
+/* Кнопки контактов */
+.links{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.links a{height:56px;font-size:15px!important;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:700;color:#fff;transition:transform .25s var(--ease-pop)}
+.links a:hover{transform:translateY(-3px) rotate(-2deg)}
+.links svg{width:20px;height:20px}
+.l-tg{background:var(--card);color:var(--ink)!important}
+.l-tg svg{color:#2aa3e0}.l-mail{background:var(--card);color:var(--ink)!important}
+
+.about p{font-size:15px;color:#3c3b38}
+.about p+p{margin-top:10px}
+
+/* Навыки */
+.skills{display:flex;flex-direction:column;gap:14px}
+.skill{display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:start}
+.skill .n{width:36px;height:36px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:12px;font-weight:700}
+.skill h3{font-size:15px;font-weight:700}
+.skill p{font-size:13px;color:var(--muted)}
+
+/* Таймлайн */
+.tl{display:flex;flex-direction:column;gap:10px}
+.tl-item{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center;padding:6px;border-radius:18px;transition:background .2s}
+.tl-item:hover{background:var(--bg)}
+.tl-ava{width:52px;height:52px;border-radius:16px;background:var(--soft);overflow:hidden;transition:transform .35s var(--ease-pop)}
+.tl-item:hover .tl-ava{transform:rotate(-8deg) scale(1.08)}
+.tl-ava img,.tl-ava svg{width:100%;height:100%;object-fit:contain;padding:4px}
+.tl-item small{font-size:12px;color:var(--muted);font-weight:600}
+.tl-item div b{display:block;font-size:14px;font-weight:700;line-height:1.25}
+.tl-sub{font-size:12px;font-weight:700;color:var(--muted);margin:10px 0 2px 6px;text-transform:uppercase;letter-spacing:.06em}
+
+/* CTA */
+.cta{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.cta h2{font-size:26px;line-height:1.05;letter-spacing:-.02em;max-width:220px}
+.cta h2 em{font-style:normal;color:#c6e27a}
+.cta .btn{display:inline-flex;margin-top:18px;background:#fff;color:var(--ink);border-radius:99px;padding:12px 18px;font-weight:700;font-size:14px;transition:transform .25s var(--ease-pop)}
+.cta .btn:hover{transform:scale(1.05)}
+.cta .mail{display:block;margin-top:12px;font-size:13px;color:#aaa}
+.cta-head{position:absolute;right:-18px;bottom:-14px;width:150px;height:150px;transition:transform .4s var(--ease-pop)}
+.cta:hover .cta-head{transform:rotate(-10deg) translateY(-8px)}
+.cta-head img,.cta-head svg{width:100%;height:100%;object-fit:contain}
+
+/* ============ ПРАВАЯ ЧАСТЬ ============ */
+.main{min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:var(--gap);background:var(--card);border-radius:var(--r);padding:10px 10px 10px 22px}
+.logo{font-weight:800;font-size:22px;letter-spacing:-.04em}
+.logo b{color:var(--accent)}
+.tabs{display:flex;gap:4px;background:var(--bg);border-radius:99px;padding:4px}
+.tabs button{padding:9px 16px;border-radius:99px;font-size:14px;font-weight:600;color:var(--muted);transition:background .2s,color .2s}
+.tabs button sup{font-size:10px;margin-left:3px}
+.tabs button.on{background:var(--ink);color:#fff}
+
+/* сетка из мелких строк по 2px: высоту каждой карточки считает скрипт (обычные — по --row, «fit» — по пропорции обложки) */
+.grid{--row:150px;display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:2px;grid-auto-flow:dense;column-gap:var(--gap);row-gap:0}
+.grid>.card{margin-bottom:var(--gap)}
+.card{clip-path:inset(0 round var(--r));--rows:2;--c:#ddd;--fg:#1d1d1b;position:relative;border-radius:var(--r);background:var(--c);color:var(--fg);overflow:hidden;grid-row:span 2;display:block;isolation:isolate;transition:transform .45s var(--ease-pop),box-shadow .3s}
+.card.l{--rows:3}
+.card.w{grid-column:span 2;--rows:3}
+.card:hover{transform:translateY(-4px)}
+.card.hide{display:none}
+.card-head{position:absolute;left:24px;top:22px;right:24px;z-index:3;pointer-events:none}
+.card h3{font-size:clamp(20px,2.1vw,30px);line-height:1;letter-spacing:-.03em;font-weight:800;max-width:80%}
+.card p{font-size:13px;font-weight:600;opacity:.75;margin-top:6px}
+.card .go{position:absolute;right:16px;bottom:16px;z-index:4;width:44px;height:44px;border-radius:99px;background:var(--fg);color:var(--c);display:grid;place-items:center;font-size:18px;font-weight:700;transform:scale(0) rotate(-90deg);transition:transform .4s var(--ease-pop)}
+.card:hover .go{transform:scale(1) rotate(0)}
+.card.title-bottom .card-head{top:auto;bottom:22px}
+
+.stage{position:absolute;inset:0;z-index:1}
+.paused *{animation-play-state:paused!important}
+
+/* --- плейсхолдер вместо картинки --- */
+.ph{position:absolute;inset:0;background:linear-gradient(160deg,color-mix(in srgb,var(--c) calc(30% + var(--k,0)*12%),#fff) 0%,color-mix(in srgb,var(--c) 75%,#000 calc(var(--k,0)*6%)) 100%);overflow:hidden}
+.ph::before{content:"";position:absolute;width:55%;aspect-ratio:1;border-radius:50%;left:calc(10% + var(--k,0)*14%);top:calc(14% + var(--k,0)*7%);background:color-mix(in srgb,var(--c) 40%,#fff);opacity:.7}
+.ph i{position:absolute;left:12%;height:7%;border-radius:20px;background:#fff;opacity:.75}
+.ph i:nth-child(1){top:70%;width:62%}
+.ph i:nth-child(2){top:80%;width:44%;opacity:.5}
+.ph i:nth-child(3){top:8%;width:30%;height:5%;opacity:.55}
+.media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+/* --- ТЕЛЕФОНЫ --- */
+.phones{container-type:size}
+.phones .phone{--h:min(72cqh,420px);position:absolute;bottom:-12%;height:var(--h);aspect-ratio:9/19;border-radius:22px;background:#111;padding:5px;box-shadow:0 20px 40px -14px rgba(0,0,0,.45);animation:float 6s ease-in-out infinite;transition:transform .6s var(--ease-pop)}
+.phones .phone .scr{position:relative;width:100%;height:100%;border-radius:17px;overflow:hidden;background:#fff}
+.phones .phone .scr::after{content:"";position:absolute;top:6px;left:50%;width:32%;height:12px;border-radius:9px;background:#111;transform:translateX(-50%);z-index:2}
+.phones .p1{left:calc(50% - var(--h)*.62);--r:-9deg;animation-delay:-1s;z-index:1}
+.phones .p2{--h:min(80cqh,470px);left:calc(50% - var(--h)*.237);bottom:-14%;--r:0deg;animation-delay:-3s;z-index:2}
+.phones .p3{left:calc(50% + var(--h)*.15);--r:9deg;animation-delay:-5s;z-index:1}
+.card:hover .phones .p1{transform:translateX(-14%) rotate(-14deg)}
+.card:hover .phones .p3{transform:translateX(14%) rotate(14deg)}
+.card:hover .phones .p2{transform:translateY(-6%)}
+@keyframes float{0%,100%{translate:0 0;rotate:var(--r)}50%{translate:0 -14px;rotate:calc(var(--r) + 2deg)}}
+.slides{position:absolute;inset:0}
+.slides>*{position:absolute;inset:0;opacity:0;transition:opacity .8s ease}
+.slides>.on{opacity:1}
+
+/* --- БРАУЗЕР / ЛЭПТОП --- */
+.browser .win{position:absolute;left:10%;right:-6%;top:34%;bottom:-10%;background:#fff;border-radius:16px 0 0 0;box-shadow:0 24px 50px -20px rgba(0,0,0,.45);overflow:hidden;transition:transform .6s var(--ease-pop)}
+.card:hover .browser .win{transform:translate(-3%,-4%)}
+.browser .bar{height:26px;display:flex;align-items:center;gap:6px;padding:0 12px;border-bottom:1px solid #eee;background:#fafafa}
+.browser .bar i{width:9px;height:9px;border-radius:9px;background:#ddd}
+.browser .bar i:nth-child(1){background:#ff6058}.browser .bar i:nth-child(2){background:#ffbd2e}.browser .bar i:nth-child(3){background:#28c941}
+.browser .vp{position:absolute;top:26px;left:0;right:0;bottom:0;overflow:hidden}
+.browser .roll{animation:roll 18s linear infinite}
+.browser .roll>div{position:relative;height:260px}
+@keyframes roll{to{transform:translateY(-50%)}}
+
+/* --- СТОПКА --- */
+.stack .sh{position:absolute;left:50%;top:44%;width:var(--w,46%);aspect-ratio:var(--ar,3/4);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 18px 36px -16px rgba(0,0,0,.4);transition:transform .9s var(--ease-pop),opacity .6s,z-index 0s .3s;translate:-50% -50%}
+.stack .sh[data-p="0"]{transform:rotate(-2deg);z-index:4}
+.stack .sh[data-p="1"]{transform:translateX(26%) rotate(8deg) scale(.92);z-index:3}
+.stack .sh[data-p="2"]{transform:translateX(-26%) rotate(-11deg) scale(.86);z-index:2}
+.stack .sh[data-p="3"]{transform:translateY(8%) rotate(3deg) scale(.8);z-index:1;opacity:.7}
+.stack .sh.fly{transform:translate(-30%,-120%) rotate(-24deg) scale(.9)!important;z-index:5}
+.card:hover .stack .sh[data-p="1"]{transform:translateX(42%) rotate(12deg) scale(.92)}
+.card:hover .stack .sh[data-p="2"]{transform:translateX(-42%) rotate(-15deg) scale(.86)}
+
+/* --- КАДР / ВИДЕО --- */
+.film .fr{position:absolute;left:8%;right:8%;top:32%;bottom:8%;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 22px 46px -18px rgba(0,0,0,.5);transition:transform .6s var(--ease-pop)}
+.card:hover .film .fr{transform:scale(1.03) rotate(-1deg)}
+.film .slides>*{animation:kb 9s ease-in-out infinite alternate}
+.film .slides>*:nth-child(2n){animation-direction:alternate-reverse}
+@keyframes kb{from{transform:scale(1.02) translate(0,0)}to{transform:scale(1.18) translate(-3%,-2%)}}
+.film .rec{position:absolute;left:12px;top:12px;z-index:3;font-size:11px;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px;letter-spacing:.08em}
+.film .rec::before{content:"";width:8px;height:8px;border-radius:9px;background:#ff3b30;animation:blink 1.2s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.film .prog{position:absolute;left:12px;right:12px;bottom:12px;height:3px;border-radius:3px;background:rgba(255,255,255,.3);z-index:3;overflow:hidden}
+.film .prog i{display:block;height:100%;width:100%;background:#fff;transform-origin:left;animation:prog 3.2s linear infinite}
+@keyframes prog{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.film.tall .fr{left:22%;right:22%;top:24%;bottom:-6%}
+
+.tabs .to-about{padding:9px 16px;border-radius:99px;font-size:14px;font-weight:700;background:var(--accent);color:#fff;margin-left:4px;display:inline-flex;gap:6px;align-items:center;transition:transform .25s var(--ease-pop)}
+.tabs .to-about:hover{transform:translateY(2px)}
+.tabs .to-about span{display:inline-block;animation:nudge 1.6s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateY(3px)}}
+
+/* ============ ОПЫТ И ОБУЧЕНИЕ ============ */
+.exp{background:var(--card);border-radius:var(--r);padding:28px;margin-top:var(--gap);scroll-margin-top:var(--gap)}
+.exp-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px}
+.exp h2{font-size:clamp(24px,2.6vw,36px);letter-spacing:-.03em;line-height:1}
+.exp-top span{color:var(--muted);font-weight:600;font-size:14px}
+.exp-intro{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;padding-bottom:26px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.exp .about p{font-size:17px;line-height:1.5;color:#3c3b38}
+.exp .about p+p{margin-top:12px}
+.exp .skills{margin-top:10px}
+.exp-sub{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.exp-sub h3{font-size:22px;letter-spacing:-.02em}
+.exp-sub span{color:var(--muted);font-weight:600;font-size:14px}
+.exp-cols{display:grid;grid-template-columns:1.2fr 1fr;gap:28px}
+.exp .tl-item{grid-template-columns:88px 1fr;gap:16px}
+.exp .tl-ava{width:88px;height:88px;border-radius:24px;background:#fff;border:1px solid var(--line)}
+.exp .tl-item div b{font-size:16px}
+
+/* ============ ВЕРТИКАЛЬНОЕ ВИДЕО (VERTEX) ============ */
+.card.reel-card .media{object-fit:cover;object-position:50% 30%}
+.card.reel-card img.media{transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.card.reel-card:hover img.media{transform:scale(1.04)}
+.reel .reel-shade,.still .reel-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.55),rgba(0,0,0,0) 32%)}
+
+/* ============ КАРТОЧКА-ПАПКА (WANDERER) ============ */
+.card.group{cursor:default}
+.grp-hint{position:absolute;right:20px;top:24px;z-index:3;font-size:12px;font-weight:700;color:#fff;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border-radius:99px;padding:7px 12px;transition:opacity .3s}
+.grp{position:absolute;left:16px;right:16px;bottom:16px;z-index:5;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grp a{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff;color:#17171b;border-radius:20px;padding:16px 18px;opacity:0;transform:translateY(24px) scale(.96);transition:transform .5s var(--ease-pop),opacity .3s,background .2s;transition-delay:calc(var(--i) * 70ms)}
+.grp a b{display:block;font-size:16px;letter-spacing:-.01em}
+.grp a small{display:block;font-size:12px;font-weight:600;color:#77756f;margin-top:2px}
+.grp a i{font-style:normal;width:36px;height:36px;flex:none;border-radius:99px;background:#17171b;color:#fff;display:grid;place-items:center;font-weight:700;transition:transform .3s var(--ease-pop)}
+.grp a:hover{background:#c6e27a}
+.grp a:hover i{transform:rotate(45deg)}
+.card.group:hover .grp a,.card.group:focus-within .grp a{opacity:1;transform:none}
+.card.group:hover .grp-hint,.card.group:focus-within .grp-hint{opacity:0}
+.card.group:hover{transform:none}
+@media (hover:none){.grp a{opacity:1;transform:none}.grp-hint{display:none}}
+
+/* ============ ДЕМО В МОКАПЕ НОУТБУКА (Vivecto OEM) ============ */
+.card.wt{grid-column:span 2;--rows:4}
+.demo{container-type:size}
+.demo .lay{position:absolute;left:50%;bottom:2%;width:min(96cqw,(100cqh - 80px) * var(--ar));translate:-50% 0}
+.demo video{width:100%;height:100%;display:block}
+
+/* ============ СТЕКЛЯННЫЙ МАСКОТ ============ */
+.mascot{container-type:size}
+.mascot .lay{position:absolute;left:50%;bottom:0;width:min(100cqw,(100cqh - 40px) * var(--ar));translate:-50% 0}
+.mascot img{position:absolute;max-width:none}
+/* маленькие приклеены срезанным краем к краю карточки: двигаются только так, чтобы срез не показывался */
+.mascot .ms-top{right:7%;top:0;width:min(15.8cqw,15.8cqh * 1.234);height:auto;z-index:4;animation:msTop 7s cubic-bezier(.2,.8,.25,1) -3.5s infinite}
+.mascot .ms-left{left:0;bottom:10%;width:min(15.2cqw,15.2cqh * 1.234);height:auto;z-index:4;animation:msLeft 7s cubic-bezier(.2,.8,.25,1) infinite}
+@keyframes msLeft{0%,8%{transform:translate(-102%,0)}24%{transform:translate(0,0)}40%{transform:translate(0,-6%)}56%{transform:translate(0,2%)}66%{transform:translate(0,0)}82%,100%{transform:translate(-102%,0)}}
+@keyframes msTop{0%,8%{transform:translate(0,-102%)}24%{transform:translate(0,0)}40%{transform:translate(-8%,0)}56%{transform:translate(5%,0)}66%{transform:translate(0,0)}82%,100%{transform:translate(0,-102%)}}
+.card:hover .ms-main{animation-duration:3s}
+
+/* ============ ВРАЩАЮЩИЙСЯ ГИПНО-ШАР (3D elements) ============ */
+.spin{container-type:size}
+.spin .lay{position:absolute;inset:0}
+.spin .sp-bg{position:absolute;inset:0;width:100%;height:100%}
+.spin .sp-disc{position:absolute;border-radius:50%;animation:spFloat 5s ease-in-out infinite}
+.spin .sp-disc img{width:100%;height:100%;display:block;animation:spTurn 14s linear infinite}
+/* свет остаётся на месте, крутится только узор */
+.spin .sp-disc i{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 26%,rgba(255,255,255,.35),rgba(255,255,255,0) 38%),radial-gradient(circle at 70% 78%,rgba(40,20,120,.18),rgba(40,20,120,0) 55%)}
+@keyframes spTurn{to{transform:rotate(360deg)}}
+@keyframes spFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5%)}}
+.card:hover .spin .sp-disc img{animation-duration:4s}
+
+/* ============ СТАТИЧНОЕ ПРЕВЬЮ ============ */
+.still{container-type:size}
+.still .lay{position:absolute;left:50%;bottom:0;width:min(100cqw,(100cqh - 78px) * var(--ar));translate:-50% 0;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.still .lay img{width:100%;height:100%;display:block}
+.still .lay.fill{width:max(100cqw,100cqh * var(--ar));top:50%;bottom:auto;translate:-50% -50%}
+.still .lay.fade{-webkit-mask-image:radial-gradient(75% 70% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(75% 70% at 50% 50%,#000 70%,transparent 100%)}
+.card:hover .still .lay{transform:scale(1.03)}
+
+/* ============ СЛОИ, КОТОРЫЕ ДВИГАЮТСЯ ОТНОСИТЕЛЬНО ДРУГ ДРУГА (AdaptAI) ============ */
+.layers{container-type:size}
+.layers .lay{position:absolute;left:50%;top:56%;width:min(100cqw,90cqh * var(--ar));translate:-50% -50%}
+.layers .ly{position:absolute;max-width:none;transition:translate .7s var(--ease-pop)}
+.layers .ly:not(.bg){filter:drop-shadow(0 10px 16px rgba(70,90,200,.14))}
+.layers .bg{animation:lyBg 10s ease-in-out infinite}
+.layers .l1{animation:lyA 6.5s ease-in-out infinite}
+.layers .l2{animation:lyB 5.5s ease-in-out -2s infinite}
+.layers .l3{animation:lyC 7s ease-in-out -4s infinite}
+@keyframes lyBg{0%,100%{transform:none}50%{transform:translate(1.6%,-1.2%) scale(1.035) rotate(.6deg)}}
+@keyframes lyA{0%,100%{transform:none}50%{transform:translate(0,-2.2%) rotate(-.35deg)}}
+@keyframes lyB{0%,100%{transform:none}50%{transform:translate(-1.8%,1.6%) rotate(.5deg)}}
+@keyframes lyC{0%,100%{transform:none}50%{transform:translate(1.8%,2%) rotate(-.45deg)}}
+.card:hover .layers .l1{translate:0 -3%}
+.card:hover .layers .l2{translate:-3% 3%}
+.card:hover .layers .l3{translate:3% 3%}
+
+/* ============ СЛАЙДЕР ВИДЕО (NEST) ============ */
+.clips{overflow:hidden}
+.clips .clip{position:absolute;left:50%;top:56%;height:96%;aspect-ratio:4/5;max-width:none;translate:-50% -50%;object-fit:cover;opacity:0;transform:translateX(110%) scale(.9);-webkit-mask-image:linear-gradient(to right,transparent,#000 8%,#000 92%,transparent),linear-gradient(to bottom,transparent,#000 8%);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent,#000 8%,#000 92%,transparent),linear-gradient(to bottom,transparent,#000 8%);mask-composite:intersect;transition:transform .9s cubic-bezier(.65,0,.25,1),opacity .5s}
+.clips .clip.on{opacity:1;transform:none}
+.clips .clip.out{opacity:1;transform:translateX(-110%) scale(.9)}
+.clip-dots{position:absolute;left:24px;bottom:22px;display:flex;gap:6px;z-index:3}
+.clip-dots i{width:8px;height:8px;border-radius:9px;background:rgba(29,29,27,.25);transition:width .4s,background .4s}
+.clip-dots i.on{width:22px;background:var(--fg)}
+
+/* ============ ШИРОКАЯ ОБЛОЖКА КЕЙСА ============ */
+.featured .card{display:block;aspect-ratio:2061/763;margin-bottom:var(--gap);grid-row:auto}
+.featured .card.hide{display:none}
+.card.cover .media{object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.card.cover:hover .media{transform:scale(1.035)}
+.card.cover .card-head{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ============ КАРТОЧКА С ВИДЕО ============ */
+.card.vid .stage{background:#0e0e10}
+.card.vid .media{object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.card.vid:hover .media{transform:scale(1.04)}
+.card.vid .card-head{top:auto;bottom:0;left:0;right:0;padding:60px 24px 22px;background:linear-gradient(to top,rgba(10,10,12,.85),rgba(10,10,12,0))}
+.card .watch{position:absolute;right:16px;bottom:18px;z-index:4;background:#17171b;color:#fff;border-radius:99px;padding:10px 16px;font-size:13px;font-weight:700;transition:transform .35s var(--ease-pop)}
+.card .watch b{display:inline-block;transition:transform .3s var(--ease-pop)}
+.card:hover .watch{transform:scale(1.06)}
+.card:hover .watch b{transform:translateX(4px)}
+
+/* ============ ОКНО КЕЙСА ============ */
+html.lock{overflow:hidden}
+.case{position:fixed;inset:0;z-index:100;background:rgba(20,20,18,0);transition:background .35s ease}
+.case.on{background:rgba(20,20,18,.55);backdrop-filter:blur(6px)}
+.case-scroll{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:24px 16px 40px}
+.case-panel{max-width:1180px;margin:0 auto;background:var(--bg);border-radius:32px;padding:28px;transform:translateY(60px);opacity:0;transition:transform .5s var(--ease-pop),opacity .3s}
+.case.on .case-panel{transform:none;opacity:1}
+.case-top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:22px}
+.case-top h2{font-size:clamp(32px,4vw,56px);line-height:1;letter-spacing:-.04em;margin:10px 0 10px}
+.case-top p{font-size:17px;color:#4a4945;max-width:560px}
+.case-tags{display:flex;flex-wrap:wrap;gap:6px}
+.case-tags span{font-size:12px;font-weight:700;background:#fff;border-radius:99px;padding:6px 11px}
+.case-x{flex:none;width:48px;height:48px;border-radius:99px;background:var(--ink);color:#fff;font-size:18px;transition:transform .3s var(--ease-pop)}
+.case-x:hover{transform:rotate(90deg)}
+.case-video{display:block;width:100%;aspect-ratio:16/9;border-radius:22px;background:#000;margin-bottom:14px}
+.case-slides{display:flex;flex-direction:column;gap:14px}
+.case-slides img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:22px;background:#e9e7e1}
+.case-end{display:flex;justify-content:center;padding-top:22px}
+.case-video[hidden],.case-bh[hidden]{display:none}
+.case-slides.long{gap:0;border-radius:22px;overflow:hidden}
+.case-slides.long img{aspect-ratio:auto;height:auto;object-fit:initial;border-radius:0;background:#d9d9f2}
+.case-end{gap:10px;flex-wrap:wrap}
+.case-slides.gallery img,.case-slides.gallery video{width:100%;height:auto;aspect-ratio:auto;object-fit:initial;display:block}
+.case-slides.gallery .case-gal-video{aspect-ratio:16/9;border-radius:22px;background:#000}
+.case-jrow{display:flex;gap:14px}
+.case-slides.gallery .case-jrow img{width:0;min-width:0;height:auto;border-radius:22px;object-fit:cover}
+.case-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.case-row img{border-radius:22px}
+.case-inline-video{background:#fff;padding:0 4.5% 3%}
+.case-inline-video video{display:block;width:100%;aspect-ratio:16/9;border-radius:16px;background:#000}
+.case-inline-video.vert{padding:0 5.3% 3%}
+.case-inline-video.vert video{aspect-ratio:9/16;width:min(100%,460px);margin:0 auto}
+.case-bh{background:#fff;color:var(--ink);border-radius:99px;padding:13px 22px;font-weight:700;font-size:15px}
+.case-back{background:var(--ink);color:#fff;border-radius:99px;padding:13px 22px;font-weight:700;font-size:15px}
+
+/* ============ ИГРА ============ */
+.game{grid-column:1/-1;background:var(--card);border-radius:var(--r);padding:28px;margin-top:var(--gap)}
+.game-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.game h2{font-size:clamp(24px,2.6vw,36px);letter-spacing:-.03em;line-height:1}
+.game p{color:var(--muted);font-size:14px;margin-top:6px;max-width:440px}
+.game .again{background:var(--ink);color:#fff;border-radius:99px;padding:11px 18px;font-weight:700;font-size:14px}
+.board{position:relative}
+.field{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:2px;padding:6px;border-radius:22px;background:#fff;touch-action:manipulation}
+.field button{aspect-ratio:1;border-radius:16px;position:relative}
+.field button img,.field button svg{width:100%;height:100%;object-fit:contain;pointer-events:none;transform-origin:50% 60%;transition:transform .35s var(--ease-pop)}
+.field:not(.done) button:hover{z-index:3}
+.field:not(.done) button:hover img,.field:not(.done) button:focus-visible img{transform:scale(1.7) rotate(-4deg);filter:drop-shadow(0 8px 12px rgba(0,0,0,.18))}
+.field button:focus-visible{outline:2px solid var(--ink);outline-offset:-2px;z-index:5}
+.field button.nope img{animation:nope .45s}
+.field button.nope::after{content:"не она";position:absolute;left:50%;top:-6px;translate:-50% -100%;font-size:11px;font-weight:700;background:var(--ink);color:#fff;border-radius:99px;padding:3px 8px;white-space:nowrap;z-index:6;animation:fadeUp .9s forwards}
+@keyframes nope{20%{transform:translateX(-5px) rotate(-6deg)}40%{transform:translateX(5px) rotate(6deg)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+@keyframes fadeUp{0%{opacity:0;translate:-50% -70%}20%{opacity:1;translate:-50% -100%}80%{opacity:1}100%{opacity:0;translate:-50% -140%}}
+.field.done button:not(.yes){opacity:.25;transition:opacity .4s}
+.field button.yes{z-index:4}
+.field button.yes img{transform:scale(1.6)!important;transition:transform .5s var(--ease-pop),opacity .3s}
+.board:has(.win.on) .field button.yes img{opacity:.25;transform:none!important}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;font-size:14px;color:var(--muted);background:var(--bg);border-radius:99px;padding:10px 16px}
+.game-ctrl{display:flex;gap:8px;align-items:center}
+.win{position:absolute;inset:0;z-index:20;display:grid;place-items:center;pointer-events:none;opacity:0;transition:opacity .3s}
+.win.on{opacity:1;pointer-events:auto}
+.win-card{background:#fff;border-radius:28px;padding:24px 30px 26px;text-align:center;box-shadow:0 30px 60px -20px rgba(0,0,0,.35);transform:scale(.7) rotate(-4deg);transition:transform .6s var(--ease-pop);max-width:300px}
+.win.on .win-card{transform:none}
+.win-card img{width:120px;height:120px;object-fit:contain;margin:-70px auto 6px;filter:drop-shadow(0 10px 14px rgba(0,0,0,.2));animation:breathe 3s ease-in-out infinite}
+.win-card b{display:block;font-size:24px;letter-spacing:-.02em}
+.win-card span{display:block;color:var(--muted);font-size:14px;margin:4px 0 16px}
+.win-card button{background:var(--ink);color:#fff;border-radius:99px;padding:11px 20px;font-weight:700;font-size:14px}
+.status{margin-top:14px;font-weight:700;min-height:22px}
+
+footer{grid-column:2;display:flex;justify-content:space-between;padding:22px 8px 8px;font-size:13px;color:var(--muted)}
+
+/* ============ АДАПТИВ ============ */
+@media (max-width:1020px){
+  .page{grid-template-columns:1fr}
+  /* на планшете и телефоне: голова и контакты → работы → остальная инфа */
+  .side{display:contents}
+  .side>*{order:3}
+  .side>.hero{order:1}.side>.links{order:2}.main{order:2}
+  footer{grid-column:auto;order:5}
+  .hero{display:grid;grid-template-columns:1fr 1fr}
+  .heads{aspect-ratio:auto;min-height:320px}
+  .hero-txt{align-self:end}
+}
+@media (max-width:640px){
+  :root{--r:24px;--gap:10px}
+  .hero{grid-template-columns:1fr}
+  .heads{aspect-ratio:1/1}
+  .grid{grid-template-columns:1fr;--row:130px}
+  .field{grid-template-columns:repeat(auto-fill,minmax(48px,1fr))}
+  .game{padding:20px}
+  .game-ctrl{width:100%}.game-ctrl .again{flex:1}
+  .card.w,.card.wt{grid-column:auto}
+  .card.wt{--rows:3}
+  .topbar{flex-direction:column;align-items:stretch;padding:12px}
+  .tabs{justify-content:space-between}
+  .tabs button{flex:1;padding:9px 6px}
+  .card .go{transform:none}
+  .case-scroll{padding:10px 8px 24px}
+  .case-panel{padding:18px;border-radius:24px}
+  .case-slides img,.case-video{border-radius:14px}
+  .card .watch{padding:8px 12px;font-size:12px}
+  .grp{grid-template-columns:1fr}
+  .grp a{padding:12px 14px}
+  .featured .card .watch{right:10px;bottom:10px;padding:6px 10px;font-size:11px}
+  .card.vid{--rows:3}
+  .card.vid .media{object-fit:contain;object-position:center 25%}
+  .card.vid:hover .media{transform:none}
+  .exp-cols,.exp-intro{grid-template-columns:1fr;gap:10px}
+  .exp .about p{font-size:15px}
+  .tabs{flex-wrap:wrap}
+  .tabs .to-about{flex-basis:100%;justify-content:center;margin:4px 0 0}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+
+  <!-- ===================== ЛЕВАЯ КОЛОНКА ===================== -->
+  <aside class="side">
+    <section class="box hero">
+      <div class="heads" id="heads" role="button" tabindex="0" aria-label="Сменить образ">
+        <div class="dots" id="dots"></div>
+        <div class="rig" id="rig"></div>
+        <span class="tap">клик — следующий образ</span>
+      </div>
+      <div class="hero-txt">
+        <div class="role">Графический дизайнер & AI-креатор</div>
+        <h1>Виктория Евстафьева<b>.</b></h1>
+        <p>Делаю идеи видимыми — в графике, интерфейсах и AI. Под каждую задачу — свой подход.</p>
+        <span class="loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Томск, Россия</span>
+      </div>
+    </section>
+
+    <nav class="links" aria-label="Контакты">
+      <a class="l-tg" href="https://t.me/vikaevstafjewa" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 18.7 19.4c-.2 1.1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-5 9.2-8.3c.4-.4-.1-.6-.6-.2L6.1 13 1.3 11.5c-1-.3-1.1-1 .2-1.5L20.5 2.7c.9-.3 1.7.2 1.4 1.6z"/></svg>Telegram</a>
+      <a class="l-mail" href="mailto:vika.evstafjewa@yandex.ru" title="vika.evstafjewa@yandex.ru"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg>Email</a>
+    </nav>
+
+
+
+
+    <section class="box cta" id="contact">
+      <h2>Давайте создадим что-то <em>интересное.</em></h2>
+      <a class="btn" href="https://t.me/vikaevstafjewa" target="_blank" rel="noopener">Написать в Telegram ↗</a>
+      <span class="mail">vika.evstafjewa@yandex.ru</span>
+      <div class="cta-head" id="ctaHead"></div>
+    </section>
+  </aside>
+
+  <!-- ===================== РАБОТЫ ===================== -->
+  <main class="main" id="work">
+    <div class="topbar">
+      <a class="logo" href="#top">ve<b>.</b></a>
+      <div class="tabs" role="tablist">
+        <button class="on" data-f="all">Все<sup>15</sup></button>
+        <button data-f="design">Дизайн<sup>08</sup></button>
+        <button data-f="ai">AI-контент<sup>07</sup></button>
+        <a class="to-about" href="#about">Обо мне <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+
+    <div class="featured" id="featured"></div>
+    <div class="grid" id="grid"></div>
+
+    <section class="exp" id="about" aria-labelledby="aboutTitle">
+      <div class="exp-top">
+        <h2 id="aboutTitle">Обо мне</h2>
+        <span>Графический дизайнер & AI-креатор</span>
+      </div>
+      <div class="exp-intro">
+        <div class="about">
+          <p>Графический дизайнер с опытом в маркетинге и интересом к цифровым продуктам. Делаю креативы для соцсетей, презентации, айдентику, баннеры и печать.</p>
+          <p>В UX/UI — исследование продукта, сценарии, вайрфреймы, UI kit и прототипы. AI помогает исследовать образы, придумывать персонажей и визуальные истории.</p>
+        </div>
+        <div>
+          <div class="tl-sub">Что я делаю</div>
+          <div class="skills">
+        <div class="skill"><span class="n">01</span><div><h3>Графический дизайн</h3><p>Figma · Photoshop · Illustrator</p></div></div>
+        <div class="skill"><span class="n">02</span><div><h3>Интерфейсы</h3><p>Сценарии · UI kit · Прототипы</p></div></div>
+        <div class="skill"><span class="n">03</span><div><h3>AI и motion</h3><p>Midjourney · Nano Banana · Blender · After Effects</p></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="exp-sub"><h3>Опыт и обучение</h3><span>2019 — 2026</span></div>
+      <div class="exp-cols">
+        <div><div class="tl-sub">Опыт</div><div class="tl" id="tlWork"></div></div>
+        <div><div class="tl-sub">Обучение</div><div class="tl" id="tlEdu"></div></div>
+      </div>
+    </section>
+
+    <section class="game" aria-labelledby="gameTitle">
+      <div class="game-top">
+        <div>
+          <h2 id="gameTitle">Найди ту, что отличается</h2>
+          <p>Одна из этих голов подмигивает. Наводи курсор на головы, чтобы рассмотреть, и кликни на неё. Стрелки и Enter тоже работают.</p>
+        </div>
+        <div class="game-ctrl">
+          <span class="timer" id="timer">0.0 сек</span>
+          <button class="again" id="again">Сыграть ещё</button>
+        </div>
+      </div>
+      <div class="board">
+        <div class="field" id="field" role="group" aria-label="Игровое поле"></div>
+        <div class="win" id="win">
+          <div class="win-card">
+            <img src="assets/game/wink-big.webp" alt="">
+            <b id="winTime">Нашлась!</b>
+            <span id="winBest"></span>
+            <button id="again2">Сыграть ещё</button>
+          </div>
+        </div>
+      </div>
+      <div class="status" id="status" role="status"></div>
+    </section>
+
+  </main>
+    <footer class="foot"><span>© 2026 Виктория Евстафьева</span><a href="#top">Наверх ↑</a></footer>
+</div>
+
+<div class="case" id="case" role="dialog" aria-modal="true" aria-labelledby="caseTitle" hidden>
+  <div class="case-scroll" id="caseScroll">
+    <div class="case-panel">
+      <div class="case-top">
+        <div>
+          <div class="case-tags" id="caseTags"></div>
+          <h2 id="caseTitle"></h2>
+          <p id="caseLead"></p>
+        </div>
+        <button class="case-x" id="caseClose" aria-label="Закрыть кейс">✕</button>
+      </div>
+      <video class="case-video" id="caseVideo" controls playsinline preload="none"></video>
+      <div class="case-slides" id="caseSlides"></div>
+      <div class="case-end"><button class="case-back" id="caseBack">← Вернуться к работам</button><a class="case-bh" id="caseBehance" target="_blank" rel="noopener" hidden>Проект на Behance ↗</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   НАСТРОЙКИ — здесь всё, что нужно менять.
+   Пути к файлам — относительные, от корня сайта (как на текущем сайте).
+   ===================================================================== */
+
+// Головы для карточки слева. Добавляй сколько угодно.
+const HEADS = [
+  { src: "assets/hero-heads/plain.webp",    alt: "Виктория",  look: "plain" },
+  { src: "assets/hero-heads/helmet.webp",   alt: "Виктория в рыцарском шлеме с логотипом Figma",  look: "helmet" },
+  { src: "assets/hero-heads/laptop.webp",   alt: "Виктория с ноутбуком и кофе на голове",  look: "plain" },
+  { src: "assets/hero-heads/flamingo.webp", alt: "Виктория в очках и надувном фламинго",  look: "flamingo" },
+];
+
+// Для игры: обычная голова и та, что отличается.
+const GAME = { normal: "assets/game/face.webp", odd: "assets/game/wink.webp", count: 60 };
+
+const TIMELINE = [
+  { col: "work", years: "2019 — 2023", title: "Коммерческий фотограф, фотокорреспондент", img: "assets/timeline/photographer.webp", look: "camera" },
+  { col: "work", years: "2023 — 2024", title: "SMM-дизайнер / маркетолог",               img: "assets/timeline/smm.webp",          look: "glasses" },
+  { col: "work", years: "2025 — 2026", title: "Графический дизайнер",                    img: "assets/timeline/designer.webp",     look: "paint" },
+  { col: "edu", years: "2025", title: "Академия Rubius, курс UX/UI-дизайнер",           img: "assets/timeline/rubius.webp",       look: "cap" },
+  { col: "edu", years: "2026", title: "Школа «Делай промт», нейросети и промтинг",      img: "assets/timeline/ai-learning.webp",  look: "robot" },
+];
+
+/* Работы.
+   kind:  phones  — три телефона плавают, экраны листаются (мобильные приложения)
+          browser — окно браузера, страница медленно прокручивается (сайты, сервисы)
+          stack   — стопка карточек, верхняя улетает назад (плакаты, креативы, кампании)
+          film    — кадр с плавным наездом и сменой картинок (видео, AI-истории)
+   size:  m — обычная, l — высокая, w — широкая (на две колонки)
+   media: список картинок, например ["assets/works/muse/1.webp","assets/works/muse/2.webp"].
+          Пока пусто — рисуется цветная заглушка, анимация всё равно работает. */
+const WORKS = [
+  { cat:"ai", id:"3d-elements", title:"3D elements", sub:"3D-стикеры и персонажи", kind:"spin", size:"l", fit:1, color:"#9fa1e9", fg:"#1d1d1b", url:"https://www.behance.net/gallery/250734963/Creation-of-3D-elements",
+    bg:"assets/works/3d/hypnosis.webp", disc:"assets/works/3d/hyp-disc.webp", discBox:[86,92,846], w:1024, h:1024,
+    case: {
+      name: "3D elements",
+      lead: "Серия глянцевых 3D-стикеров и персонажей в единой палитре: лайм, лаванда и оранжевый — эмоции, насекомые, еда и пришельцы.",
+      tags: ["3D", "AI", "Стикеры", "Персонажи"],
+      gallery: true,
+      slides: [[{src:"assets/works/3d/alien1.webp", ar:0.667}, {src:"assets/works/3d/snail.webp", ar:1.25}, {src:"assets/works/3d/crying.webp", ar:1}],
+               [{src:"assets/works/3d/duck.webp", ar:1.25}, {src:"assets/works/3d/hypnosis.webp", ar:1}, {src:"assets/works/3d/mushroom.webp", ar:1.25}],
+               [{src:"assets/works/3d/lemon.webp", ar:1}, {src:"assets/works/3d/bee.webp", ar:1.25}, {src:"assets/works/3d/bull.webp", ar:1}],
+               [{src:"assets/works/3d/ladybug.webp", ar:1.25}, {src:"assets/works/3d/alien2.webp", ar:0.667}, {src:"assets/works/3d/indifferent.webp", ar:1}],
+               [{src:"assets/works/3d/fatman.webp", ar:1}, {src:"assets/works/3d/heart.webp", ar:1}, {src:"assets/works/3d/inflatable.webp", ar:1}]],
+      behance: "https://www.behance.net/gallery/250734963/Creation-of-3D-elements",
+    } },
+  { cat:"ai", id:"monster-party", title:"Monster Party", sub:"Сюрреалистичные персонажи · Видео", kind:"reel", size:"l", fit:544/720, color:"#c37a84", fg:"#fff", url:"https://www.behance.net/gallery/251655843/AI-Character-Design-Surreal-Video-Campaign",
+    video:"assets/works/monster/monster-loop.mp4", poster:"assets/works/monster/monster-poster.jpg",
+    case: {
+      name: "Monster Party",
+      lead: "AI-персонажи и мир для сюрреалистичной видеокампании: пастельная вселенная, где монстры — обычные члены общества.",
+      tags: ["Character Design", "Worldbuilding", "AI", "Art Direction"],
+      long: true,
+      slides: ["assets/works/monster/m-1.webp", "assets/works/monster/m-2.webp", "assets/works/monster/m-3.webp", "assets/works/monster/group.webp"],
+      behance: "https://www.behance.net/gallery/251655843/AI-Character-Design-Surreal-Video-Campaign",
+    } },
+  { cat:"ai", id:"dog-leash", title:"Dog leash campaign", sub:"Кампания для бренда поводков", kind:"reel", size:"l", fit:1920/1080, color:"#a3bb5e", fg:"#fff", url:"https://www.behance.net/gallery/250460553/sampaign-for-a-dog-leash-brand",
+    video:"assets/works/leash/leash.mp4", poster:"assets/works/leash/leash-poster.jpg",
+    case: {
+      lead: "Кампания для бренда поводков в форме сосисок: встроить реальный продукт в сюрреалистичный мир и сохранить его узнаваемый вид. Для соцсетей бренда.",
+      tags: ["Рекламная кампания", "AI-фото", "3D", "SMM"],
+      gallery: true,
+      slides: ["assets/works/leash/l-01.webp", { video:"assets/works/leash/leash-full.mp4", poster:"assets/works/leash/leash-poster.jpg" }, "assets/works/leash/l-03.webp", ["assets/works/leash/l-07.webp", "assets/works/leash/l-06.webp"], "assets/works/leash/l-04.webp",
+               ["assets/works/leash/l-08.webp", "assets/works/leash/l-02.webp"], ["assets/works/leash/l-10.webp", "assets/works/leash/l-11.webp"], "assets/works/leash/l-09.webp", "assets/works/leash/l-05.webp"],
+      behance: "https://www.behance.net/gallery/250460553/sampaign-for-a-dog-leash-brand",
+    } },
+  { cat:"design", title:"NEST", sub:"Концепция мобильного приложения", kind:"clips", size:"l", color:"#ffffff", url:"https://www.behance.net/gallery/256129933/NEST-is-a-mobile-app-concept-designed",
+    clips:["assets/works/nest/nest-white.mp4"], media:[] },
+  { cat:"design", title:"Vivecto — раздел OEM", sub:"Веб-дизайн · калькулятор трафика", kind:"demo", size:"wt", color:"#ffffff", url:"https://www.behance.net/gallery/238968969/razdel-OEM-dlja-sajta-Vivecto",
+    video:"assets/works/vivecto/oem.mp4", w:1200, h:760, media:[] },
+  { cat:"ai", title:"VERTEX Elevator Group", sub:"Концептуальная рекламная кампания", kind:"still", size:"l", fit:380/681, color:"#1a1a1a", fg:"#fff", w:380, h:681, cover:"assets/works/vertex/cover2.webp", fill:true, trim:true, id:"vertex", url:"https://www.behance.net/gallery/251567885/VERTEX-Elevator-Group-Fictional-Advertising-Campaign",
+    case: {
+      name: "VERTEX Elevator Group",
+      lead: "Вымышленная рекламная кампания для несуществующего завода лифтов: надёжность лифта через художественную метафору — воительница с вороном в обычном лифте.",
+      tags: ["Рекламная кампания", "AI-видео", "Art Direction"],
+      long: true,
+      // по смыслу: идея → ролик → кадры и раскрытие концепции
+      slides: ["assets/works/vertex/v-1.webp", { video:"assets/works/vertex/vertex-full.mp4", poster:"assets/works/vertex/poster.jpg", vertical:true },
+               "assets/works/vertex/v-2.webp", "assets/works/vertex/v-3.webp"],
+      behance: "https://www.behance.net/gallery/251567885/VERTEX-Elevator-Group-Fictional-Advertising-Campaign",
+    },
+    media:[] },
+  { cat:"ai", title:"WANDERER", sub:"Вселенная игры · 2 проекта", kind:"reel", size:"w", color:"#141a24", fg:"#fff", video:"assets/works/wanderer/intro-preview.mp4", poster:"assets/works/wanderer/intro-poster.jpg",
+    // карточка-папка: при наведении показывает проекты внутри
+    group:[ { title:"Мир и персонажи", sub:"Концепт-арт", url:"https://www.behance.net/gallery/251904315/WANDERER-Character-Environment-Concept-Art",
+              id:"wanderer-world", case:{ name:"WANDERER — мир и персонажи", lead:"Концепт игры про лиса-странника, хранителя Последнего фонаря: персонаж, фонарь и светлячки, зелья, ассеты и игровые сцены.", tags:["Концепт-арт", "Персонаж", "Геймдизайн"], long:true,
+                slides:[1,2,3,4,5,6,7,8,9].map(n => `assets/works/wanderer/w-${n}.webp`), behance:"https://www.behance.net/gallery/251904315/WANDERER-Character-Environment-Concept-Art" } },
+            { title:"Кинематографичное интро", sub:"Прототип в Godot", url:"https://www.behance.net/gallery/252275339/WANDERER-Cinematic-Intro-Godot-Prototype",
+              id:"wanderer-intro", case:{ name:"WANDERER — кинематографичное интро", lead:"Вступительный ролик игры, собранный как прототип в Godot: лис-странник узнаёт, что маяк гаснет, и отправляется в путь.", tags:["Motion", "Godot", "Геймдев"],
+                long:true,
+                // порядок как в презентации: вступление → ролик интро → прототип → фичи → планы
+                slides:["assets/works/wanderer/i-1.webp", { video:"assets/works/wanderer/intro.mp4", poster:"assets/works/wanderer/intro-poster.jpg" },
+                        "assets/works/wanderer/i-2.webp", "assets/works/wanderer/i-3.webp", "assets/works/wanderer/i-4.webp"], behance:"https://www.behance.net/gallery/252275339/WANDERER-Cinematic-Intro-Godot-Prototype" } } ],
+    media:[] },
+  { cat:"design", title:"AI.AVATAR", sub:"UX/UI · 3D · Анимация", kind:"clips", size:"l", color:"#1b1b1b", fg:"#fff", url:"https://www.behance.net/gallery/255805337/Concept-for-a-mobile-AI-service",
+    clips:["assets/works/ai-avatar/avatar.mp4"], clipAr:"374/370", clipH:"min(84%, 370px)", clipTop:"58%", media:[] },
+  { cat:"design", title:"Vivecto — стеклянный маскот", sub:"Персонаж бренда · 3D", kind:"mascot", size:"l", color:"#1c1c1c", fg:"#fff", id:"vivecto-mascot", url:"https://www.behance.net/gallery/253667673/Vivecto-3D-Glass-Mascot-Brand-Character-System",
+    case: {
+      lead: "Mascot guide для Vivecto: стеклянный персонаж бренда, его ДНК формы, цвета, позы и применение в медиа.",
+      tags: ["Персонаж бренда", "3D", "Гайдлайн"],
+      long: true,
+      slides: [1, 2, 3, 4, 5].map(n => `assets/works/mascot/guide-${n}.webp`),
+      behance: "https://www.behance.net/gallery/253667673/Vivecto-3D-Glass-Mascot-Brand-Character-System",
+    },
+    w:1060, h:859, main:["assets/works/mascot/main.webp",221,80,766,760], left:["assets/works/mascot/left.webp",0,518,162,262], top:["assets/works/mascot/top.webp",825,0,167,149], media:[] },
+  { cat:"design", title:"Презентации", sub:"Презентационный дизайн", kind:"still", size:"l", color:"#ffffff", url:"https://www.behance.net/gallery/242081915/prezentacii",
+    w:1060, h:859, cover:"assets/works/presentations/cover.webp", media:[] },
+  { cat:"design", title:"AdaptAI", sub:"UX/UI · Сервис с AI", kind:"layers", size:"l", color:"#ffffff", url:"https://www.behance.net/gallery/238962975/AdaptAI-UXUI-service",
+    w:1060, h:859,
+    // слои снизу вверх: [файл, x, y, ширина, высота] в пикселях исходной картинки
+    layers:[ ["assets/works/adaptai/bg.webp",0,0,1060,859,"bg"], ["assets/works/adaptai/s1.webp",161,88,721,421,"l1"], ["assets/works/adaptai/s2.webp",96,429,483,314,"l2"], ["assets/works/adaptai/s3.webp",507,485,450,288,"l3"] ],
+    media:[] },
+  { cat:"ai", id:"wanna-stay-home", title:"Wanna stay home", sub:"Кампания для домашнего текстиля", kind:"still", size:"l", fit:692/517, color:"#4d6b2e", fg:"#fff", w:692, h:517, cover:"assets/works/wsh/cover.webp", fill:true, url:"https://www.behance.net/gallery/251517433/AI-Brand-Campaign-Wanna-stay-home-Home-Textile",
+    case: {
+      name: "Wanna stay home",
+      lead: "Авторская презентация текстильного бренда: дом глазами ребёнка, где кукольный домик становится целым миром, а текстиль — его важными деталями.",
+      tags: ["Art Direction", "Story", "AI-фото", "Brand"],
+      long: true,
+      slides: [1,2,3,4,5,6].map(n => `assets/works/wsh/w-${n}.webp`),
+      behance: "https://www.behance.net/gallery/251517433/AI-Brand-Campaign-Wanna-stay-home-Home-Textile",
+    } },
+  { cat:"design", title:"Креативы для соцсетей", sub:"Digital-дизайн", kind:"still", size:"l", color:"#1c1c1c", fg:"#fff", url:"https://www.behance.net/gallery/238956167/kreativy-dlja-socialnyh-setej",
+    w:1060, h:859, cover:"assets/works/social/cover.webp", media:[] },
+  { cat:"ai", id:"beyond-the-frame", title:"Fashion Editorial", sub:"Beyond the Frame · AI-фото и motion", kind:"reel", size:"l", fit:918/514, color:"#1a1a1a", fg:"#fff", url:"https://www.behance.net/gallery/250946453/AI-Fashion-Editorial-Motion-Project",
+    video:"assets/works/fashion/preview.mp4", poster:"assets/works/fashion/poster-card.jpg",
+    case: {
+      name: "Beyond the Frame",
+      lead: "Сонный визит в музей превращается в сюрреалистичное путешествие за пределы картины: экспериментальный проект на стыке AI-фотографии и motion.",
+      tags: ["AI Fashion Editorial", "Motion", "AI-фото"],
+      long: true,
+      slides: ["assets/works/fashion/f-0.webp", { video:"assets/works/fashion/full.mp4", poster:"assets/works/fashion/poster.jpg" }, "assets/works/fashion/f-1.webp", "assets/works/fashion/f-2.webp", "assets/works/fashion/f-3.webp", "assets/works/fashion/f-4.webp", "assets/works/fashion/f-5.webp"],
+      behance: "https://www.behance.net/gallery/250946453/AI-Fashion-Editorial-Motion-Project",
+    } },
+  { cat:"design", id:"na-meste", title:"На месте", sub:"Кейс iOS-приложения · UX/UI", kind:"still", size:"w", color:"#f7f5f1", w:1400, h:1341, cover:"assets/works/na-meste/card.webp", fade:true, poster:"assets/works/na-meste/poster.jpg",
+    case: {
+      lead: "Домашний каталог вещей: сфотографируй, укажи место — найди за секунду.",
+      tags: ["UX/UI", "iOS", "Айдентика", "Motion"],
+      video: "assets/works/na-meste/promo.mp4",
+      slides: ["01-cover","02-problem","03-idea","04-how","05-logo","06-shake","07-home","08-add","09-search","10-system"].map(n => `assets/works/na-meste/${n}.webp`),
+    } },
+];
+
+/* =====================================================================
+   Дальше — код. Обычно трогать не нужно.
+   ===================================================================== */
+
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* --- Нарисованная голова-заглушка: показывается, если файл не загрузился --- */
+function faceSVG(look = "plain", wink = false) {
+  const skin = "#f1c4a3", hair = "#6b3f27";
+  const eyeR = wink
+    ? `<path d="M110 101 q8 6 16 0" stroke="#2b2420" stroke-width="3.5" fill="none" stroke-linecap="round"/>`
+    : `<circle cx="118" cy="101" r="5.5" fill="#2b2420"/><circle cx="120" cy="99" r="1.6" fill="#fff"/>`;
+  let back = "", front = "";
+  switch (look) {
+    case "flamingo":
+      back = `<ellipse cx="100" cy="182" rx="80" ry="20" fill="none" stroke="#ff7aa8" stroke-width="20"/>`;
+      front = `<path d="M152 176 q18-50 2-74 q-10-12 -20-2" stroke="#ff7aa8" stroke-width="9" fill="none" stroke-linecap="round"/><circle cx="133" cy="101" r="8" fill="#ff7aa8"/><path d="M126 99 l-10 6 l9 3z" fill="#222"/>`; break;
+    case "helmet":
+      front = `<path d="M48 108 q0-74 52-76 q52 2 52 76 l0 40 q-20 32 -52 34 q-32-2 -52-34z M66 92 q34-10 68 0 l-4 60 q-30 22 -60 0z" fill="#b9bcc2" fill-rule="evenodd" stroke="#8b8f96" stroke-width="2"/><circle cx="92" cy="54" r="5" fill="#ff5f45"/><circle cx="104" cy="54" r="5" fill="#a259ff"/><circle cx="98" cy="64" r="5" fill="#1abcfe"/>`; break;
+    case "camera":
+      front = `<rect x="58" y="150" width="84" height="48" rx="10" fill="#2a2a2a"/><circle cx="100" cy="174" r="17" fill="#555" stroke="#111" stroke-width="5"/><rect x="68" y="144" width="18" height="10" rx="3" fill="#2a2a2a"/>`; break;
+    case "glasses":
+      front = `<rect x="64" y="88" width="32" height="24" rx="9" fill="#1d1d1b"/><rect x="104" y="88" width="32" height="24" rx="9" fill="#1d1d1b"/><path d="M96 98 h8" stroke="#1d1d1b" stroke-width="4"/>`; break;
+    case "paint":
+      front = `<path d="M66 118 l22 4 M68 128 l18 3 M134 118 l-22 4 M132 128 l-18 3" stroke="#4f7a3a" stroke-width="5" stroke-linecap="round"/>`; break;
+    case "cap":
+      front = `<path d="M100 22 l66 22 l-66 22 l-66 -22z" fill="#222"/><path d="M68 54 v14 q32 14 64 0 v-14" fill="#333"/><path d="M162 44 v30" stroke="#f5c242" stroke-width="3"/><circle cx="162" cy="78" r="5" fill="#f5c242"/>`; break;
+    case "robot":
+      front = `<path d="M54 74 q46-40 92 0" stroke="#9aa3ad" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M100 36 v-16" stroke="#9aa3ad" stroke-width="4"/><circle cx="100" cy="18" r="6" fill="#4ad3ff"/>`; break;
+    case "mask":
+      front = `<path d="M60 92 q40-16 80 0 q-4 22 -22 22 q-12 0 -18-8 q-6 8 -18 8 q-18 0 -22-22z" fill="#7b4bd6" stroke="#e8c15a" stroke-width="3"/>`; break;
+  }
+  return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    ${back}
+    <path d="M62 196 q0-34 38-34 q38 0 38 34z" fill="${skin}"/>
+    <ellipse cx="100" cy="92" rx="56" ry="64" fill="${hair}"/>
+    <path d="M44 100 q-4 60 20 80 l10-60z M156 100 q4 60 -20 80 l-10-60z" fill="${hair}"/>
+    <ellipse cx="100" cy="106" rx="42" ry="50" fill="${skin}"/>
+    <path d="M58 86 q20-40 60-34 q24 6 26 30 q-40-20 -86 4z" fill="${hair}"/>
+    <circle cx="82" cy="101" r="5.5" fill="#2b2420"/><circle cx="84" cy="99" r="1.6" fill="#fff"/>
+    ${eyeR}
+    <path d="M74 90 q8-5 16 0 M110 90 q8-5 16 0" stroke="#5a3522" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="74" cy="120" rx="7" ry="4" fill="#f59a9a" opacity=".5"/><ellipse cx="126" cy="120" rx="7" ry="4" fill="#f59a9a" opacity=".5"/>
+    <path d="M90 132 q10 8 20 0" stroke="#c4566a" stroke-width="4" fill="none" stroke-linecap="round"/>
+    ${front}
+  </svg>`;
+}
+
+/* Картинка с запасным вариантом: если файла нет — рисуем голову */
+function imgOr(container, src, alt, fallbackHTML) {
+  const img = new Image();
+  img.alt = alt || "";
+  img.decoding = "async";
+  img.onerror = () => { container.innerHTML = fallbackHTML; };
+  img.src = src;
+  container.appendChild(img);
+}
+
+/* ---------- Головы слева ---------- */
+const headsEl = document.getElementById("heads");
+const rig = document.getElementById("rig");
+const dotsEl = document.getElementById("dots");
+const headNodes = HEADS.map((h, i) => {
+  const d = document.createElement("div");
+  d.className = "h";
+  imgOr(d, h.src, h.alt, faceSVG(h.look));
+  rig.appendChild(d);
+  dotsEl.appendChild(document.createElement("i"));
+  return d;
+});
+let headIdx = -1;
+/* маршруты пролёта: откуда влетает [x, y, поворот] — улетает в противоположную сторону */
+const ROUTES = [
+  [-130, -10, -25], [130, 15, 22], [-20, 125, -12], [110, -110, 28],
+  [-125, 60, -18], [20, -125, 14], [130, -40, 20], [-110, -105, -28],
+];
+let routeIdx = Math.floor(Math.random() * ROUTES.length);
+function showHead(n) {
+  const prev = headNodes[headIdx];
+  if (prev) {
+    // улетает туда, откуда пришла следующая — в противоположную сторону от своего входа
+    const [x, y, r] = ROUTES[routeIdx];
+    prev.style.setProperty("--tx", -x + "%"); prev.style.setProperty("--ty", -y + "%"); prev.style.setProperty("--tr", -r + "deg");
+    prev.classList.remove("on"); prev.classList.add("out");
+    setTimeout(() => prev.classList.remove("out"), 720);
+  }
+  headIdx = (n + HEADS.length) % HEADS.length;
+  const h = HEADS[headIdx];
+  routeIdx = (routeIdx + 1 + Math.floor(Math.random() * 3)) % ROUTES.length;
+  const [x, y, r] = ROUTES[routeIdx];
+  const d = headNodes[headIdx];
+  d.style.setProperty("--fx", x + "%"); d.style.setProperty("--fy", y + "%"); d.style.setProperty("--fr", r + "deg");
+  // следующая влетает, когда предыдущая уже почти скрылась
+  setTimeout(() => d.classList.add("on"), prev ? 380 : 0);
+  [...dotsEl.children].forEach((d, i) => d.classList.toggle("on", i === headIdx));
+}
+showHead(0);
+const HEAD_DELAY = 3200;
+let headTimer = reduce ? null : setInterval(() => showHead(headIdx + 1), HEAD_DELAY);
+function bumpHead() {
+  clearInterval(headTimer);
+  showHead(headIdx + 1);
+  if (!reduce) headTimer = setInterval(() => showHead(headIdx + 1), HEAD_DELAY);
+}
+headsEl.addEventListener("click", bumpHead);
+headsEl.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); bumpHead(); } });
+
+/* Голова поворачивается за курсором */
+if (!reduce && matchMedia("(pointer:fine)").matches) {
+  let tx = 0, ty = 0, cx = 0, cy = 0;
+  addEventListener("pointermove", e => {
+    const r = headsEl.getBoundingClientRect();
+    tx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (innerWidth / 2)));
+    ty = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (innerHeight / 2)));
+  });
+  (function tick() {
+    cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
+    rig.style.transform = `translate(${cx * 14}px, ${cy * 8}px) rotate(${cx * 7}deg)`;
+    requestAnimationFrame(tick);
+  })();
+}
+
+/* Левая колонка: если она выше экрана — прилипает нижним краем */
+const side = document.querySelector(".side");
+function fitSide() {
+  if (getComputedStyle(side).display === "contents") return;
+  const gap = 14, h = side.offsetHeight;
+  side.style.top = (h + gap * 2 > innerHeight ? innerHeight - h - gap : gap) + "px";
+}
+addEventListener("resize", fitSide); addEventListener("load", fitSide);
+new ResizeObserver(fitSide).observe(side);
+
+/* ---------- Таймлайн ---------- */
+TIMELINE.forEach(t => {
+  const tl = document.getElementById(t.col === "edu" ? "tlEdu" : "tlWork");
+  const row = document.createElement("div");
+  row.className = "tl-item";
+  row.innerHTML = `<div class="tl-ava"></div><div><small>${t.years}</small><b>${t.title}</b></div>`;
+  imgOr(row.firstChild, t.img, "", faceSVG(t.look));
+  tl.appendChild(row);
+});
+imgOr(document.getElementById("ctaHead"), "assets/game/wink-big.webp", "", faceSVG("plain", true));
+
+/* ---------- Работы ---------- */
+const grid = document.getElementById("grid");
+const featured = document.getElementById("featured");
+const loops = []; // компоненты, которые переключаются по таймеру
+const clipSliders = []; // слайдеры из видео
+
+function slide(src, k, alt) {
+  // одна картинка или заглушка
+  if (src) return `<img class="media" src="${src}" alt="${alt}" loading="lazy" decoding="async">`;
+  return `<div class="ph" style="--k:${k}"><i></i><i></i><i></i></div>`;
+}
+function list(p, n) {
+  // берём картинки работы; если их меньше n — добиваем заглушками
+  const out = [];
+  for (let i = 0; i < n; i++) out.push(p.media.length ? p.media[i % p.media.length] : null);
+  return out;
+}
+
+function buildStage(p) {
+  const st = document.createElement("div");
+  st.className = "stage " + p.kind + (p.tall ? " tall" : "");
+  if (p.kind === "phones") {
+    const imgs = list(p, 6);
+    st.innerHTML = [0, 1, 2].map(i => `
+      <div class="phone p${i + 1}"><div class="scr"><div class="slides">
+        ${slide(imgs[i * 2], i * 2, p.title)}${slide(imgs[i * 2 + 1], i * 2 + 1, p.title)}
+      </div></div></div>`).join("");
+    st.querySelectorAll(".slides").forEach((s, i) => loops.push({ el: s, step: crossfade, offset: i * 900 }));
+  }
+  if (p.kind === "browser") {
+    const imgs = list(p, 3);
+    const col = imgs.map((s, i) => `<div>${slide(s, i, p.title)}</div>`).join("");
+    st.innerHTML = `<div class="win"><div class="bar"><i></i><i></i><i></i></div><div class="vp"><div class="roll">${col}${col}</div></div></div>`;
+  }
+  if (p.kind === "stack") {
+    const n = 4, imgs = list(p, n);
+    st.innerHTML = imgs.map((s, i) =>
+      `<div class="sh" data-p="${i}" style="--ar:${p.ar || "3/4"};--w:${p.w || (p.ar === "1/1" ? "44%" : "38%")}">${slide(s, i, p.title)}</div>`).join("");
+    loops.push({ el: st, step: cycleStack, offset: Math.random() * 1500 });
+  }
+  if (p.kind === "film") {
+    const imgs = list(p, 3);
+    st.innerHTML = `<div class="fr"><span class="rec">REC</span><div class="slides">${imgs.map((s, i) => slide(s, i, p.title)).join("")}</div><div class="prog"><i></i></div></div>`;
+    loops.push({ el: st.querySelector(".slides"), step: crossfade, offset: 0, sync: true });
+  }
+  if (p.kind === "reel" && p.photo) {
+    st.innerHTML = `<img class="media" src="${p.poster}" alt="" decoding="async"><i class="reel-shade"></i>`;
+  } else if (p.kind === "reel") {
+    st.innerHTML = `<video class="media" src="${p.video}" poster="${p.poster || ""}" muted loop playsinline preload="metadata" aria-hidden="true"></video><i class="reel-shade"></i>`;
+  }
+  if (p.kind === "demo") {
+    st.innerHTML = `<div class="lay" style="aspect-ratio:${p.w}/${p.h};--ar:${p.w / p.h}"><video src="${p.video}" muted loop playsinline preload="auto" aria-hidden="true"></video></div>`;
+  }
+  if (p.kind === "spin") {
+    const pc = (v, t) => (v / t * 100).toFixed(3) + "%";
+    const [dx, dy, ds] = p.discBox;
+    st.innerHTML = `<div class="lay" style="aspect-ratio:${p.w}/${p.h}"><img class="sp-bg" src="${p.bg}" alt="" decoding="async">
+      <div class="sp-disc" style="left:${pc(dx, p.w)};top:${pc(dy, p.h)};width:${pc(ds, p.w)};height:${pc(ds, p.h)}"><img src="${p.disc}" alt="" decoding="async"><i></i></div></div>`;
+  }
+  if (p.kind === "mascot") {
+    const pc = (v, t) => (v / t * 100).toFixed(3) + "%";
+    const L = ([src, x, y, w, h], cls) => `<img class="${cls}" src="${src}" alt="" decoding="async" style="left:${pc(x, p.w)};top:${pc(y, p.h)};width:${pc(w, p.w)};height:${pc(h, p.h)}">`;
+    st.innerHTML = `<div class="lay" style="aspect-ratio:${p.w}/${p.h};--ar:${p.w / p.h}">${L(p.main, "ms-main")}</div><img class="ms-left" src="${p.left[0]}" alt="" decoding="async"><img class="ms-top" src="${p.top[0]}" alt="" decoding="async">`;
+  }
+  if (p.kind === "still") {
+    st.innerHTML = `<div class="lay${p.fade ? " fade" : ""}${p.fill ? " fill" : ""}" style="aspect-ratio:${p.w}/${p.h};--ar:${p.w / p.h}"><img src="${p.cover}" alt="" decoding="async"></div>` + (p.fg === "#fff" ? `<i class="reel-shade"></i>` : "");
+  }
+  if (p.kind === "layers") {
+    const pc = (v, t) => (v / t * 100).toFixed(3) + "%";
+    st.innerHTML = `<div class="lay" style="aspect-ratio:${p.w}/${p.h};--ar:${p.w / p.h}">` +
+      p.layers.map(([src, x, y, w, h, cls]) =>
+        `<img class="ly ${cls}" src="${src}" alt="" decoding="async" style="left:${pc(x, p.w)};top:${pc(y, p.h)};width:${pc(w, p.w)};height:${pc(h, p.h)}">`).join("") +
+      `</div>`;
+  }
+  if (p.kind === "clips") {
+    st.innerHTML = p.clips.map((src, i) =>
+      `<video class="clip${i === 0 ? " on" : ""}"${p.clipAr ? ` style="aspect-ratio:${p.clipAr};height:${p.clipH || "96%"};top:${p.clipTop || "56%"}"` : ""} src="${src}" muted playsinline${p.clips.length === 1 ? " loop" : ""} preload="${i === 0 ? "auto" : "metadata"}" aria-hidden="true"></video>`).join("") +
+      (p.clips.length > 1 ? `<div class="clip-dots">${p.clips.map((_, i) => `<i class="${i === 0 ? "on" : ""}"></i>`).join("")}</div>` : "");
+    clipSliders.push(st);
+  }
+  if (p.kind === "cover") {
+    st.innerHTML = `<img class="media" src="${p.cover}" alt="" decoding="async">`;
+  }
+  if (p.kind === "video") {
+    st.innerHTML = `<video class="media" src="${p.video}" poster="${p.poster || ""}" muted loop playsinline preload="metadata" aria-hidden="true"></video>`;
+  }
+  st.querySelectorAll(".slides").forEach(s => s.firstElementChild?.classList.add("on"));
+  return st;
+}
+
+function crossfade(el) {
+  const items = [...el.children];
+  const i = items.findIndex(x => x.classList.contains("on"));
+  items[i].classList.remove("on");
+  items[(i + 1) % items.length].classList.add("on");
+}
+function cycleStack(el) {
+  const sheets = [...el.children];
+  const n = sheets.length;
+  const top = sheets.find(s => s.dataset.p === "0");
+  top.classList.add("fly");
+  setTimeout(() => {
+    top.classList.remove("fly");
+    sheets.forEach(s => s.dataset.p = (Number(s.dataset.p) - 1 + n) % n);
+  }, 380);
+}
+
+WORKS.forEach(p => {
+  const a = document.createElement(p.group ? "div" : "a");
+  a.className = `card ${p.size || "m"}${p.kind === "stack" ? " title-bottom" : ""}`;
+  if (p.group) {
+    a.classList.add("group");
+    a.tabIndex = 0;
+    a.addEventListener("click", e => {
+      const l = e.target.closest("a[data-case]"); if (!l) return;
+      e.preventDefault(); openCase(caseById(l.dataset.case));
+    });
+  } else if (p.case) {
+    a.href = "#" + p.id;
+    a.classList.add("has-case");
+    a.addEventListener("click", e => { e.preventDefault(); openCase(p); });
+  } else { a.href = p.url; a.target = "_blank"; a.rel = "noopener"; }
+  if (p.kind === "video") a.classList.add("vid");
+  if (p.fit) a.dataset.fit = p.fit;
+  if (p.trim) a.dataset.trim = 1;
+  if (p.kind === "reel") a.classList.add("reel-card");
+  if (p.kind === "cover") a.classList.add("cover");
+  a.dataset.cat = p.cat;
+  a.style.setProperty("--c", p.color);
+  if (p.fg) a.style.setProperty("--fg", p.fg);
+  a.setAttribute("aria-label", `${p.title} — ${p.sub}${p.group ? "" : p.case ? ". Открыть кейс" : ". Открыть на Behance"}`);
+  a.innerHTML = `<div class="card-head"><h3>${p.title}</h3><p>${p.sub}</p></div>` +
+    (p.group
+      ? `<span class="grp-hint" aria-hidden="true">${p.group.length} проекта · наведи</span><div class="grp">${p.group.map((g, i) =>
+          `<a href="${g.case ? "#" + g.id : g.url}"${g.case ? ` data-case="${g.id}"` : ` target="_blank" rel="noopener"`} style="--i:${i}"><span><b>${g.title}</b><small>${g.sub}</small></span><i>↗</i></a>`).join("")}</div>`
+      : `<span class="go" aria-hidden="true">${p.case ? "→" : "↗"}</span>`);
+  a.prepend(buildStage(p));
+  (p.size === "full" ? featured : grid).appendChild(a);
+});
+
+/* Анимации идут только у карточек, которые видно на экране */
+const visible = new WeakSet();
+const io = new IntersectionObserver(es => es.forEach(e => {
+  e.target.classList.toggle("paused", !e.isIntersecting);
+  const v = e.target.querySelector("video");
+  if (v && !reduce) { if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }
+  e.isIntersecting ? visible.add(e.target) : visible.delete(e.target);
+}), { rootMargin: "100px" });
+document.querySelectorAll(".card").forEach(c => io.observe(c));
+
+if (!reduce) {
+  loops.forEach(l => {
+    const card = l.el.closest(".card");
+    const run = () => { if (visible.has(card) && !document.hidden) l.step(l.el); };
+    setTimeout(() => setInterval(run, l.sync ? 3200 : 2600), l.offset);
+  });
+}
+
+/* ---------- Кейс внутри сайта ---------- */
+const caseEl = document.getElementById("case");
+const caseVideo = document.getElementById("caseVideo");
+let lastFocus = null;
+function openCase(p) {
+  const c = p.case;
+  lastFocus = document.activeElement;
+  document.getElementById("caseTitle").textContent = c.name || p.title;
+  document.getElementById("caseLead").textContent = c.lead;
+  document.getElementById("caseTags").innerHTML = c.tags.map(t => `<span>${t}</span>`).join("");
+  caseVideo.hidden = !c.video;
+  if (c.video) { caseVideo.src = c.video; caseVideo.poster = c.poster || p.poster || ""; }
+  document.getElementById("caseSlides").classList.toggle("long", !!c.long);
+  const bh = document.getElementById("caseBehance");
+  bh.hidden = !c.behance; if (c.behance) bh.href = c.behance;
+  const imgTag = (src, i) => `<img src="${src}" alt="${c.name || p.title}: изображение ${i + 1}" loading="${i < 2 ? "eager" : "lazy"}" decoding="async">`;
+  document.getElementById("caseSlides").classList.toggle("gallery", !!c.gallery);
+  document.getElementById("caseSlides").innerHTML = c.slides.map((src, i) => Array.isArray(src) && typeof src[0] === "object"
+    ? `<div class="case-jrow">${src.map((o, j) => `<img src="${o.src}" alt="${c.name || p.title}: изображение ${i * 10 + j + 1}" loading="${i < 1 ? "eager" : "lazy"}" decoding="async" style="flex:${o.ar} 1 0;aspect-ratio:${o.ar}">`).join("")}</div>`
+    : Array.isArray(src)
+    ? `<div class="case-row">${src.map((s2, j) => imgTag(s2, i * 10 + j)).join("")}</div>`
+    : typeof src === "object" && c.gallery
+    ? `<video class="case-gal-video" src="${src.video}" poster="${src.poster || ""}" controls playsinline preload="metadata"></video>`
+    : typeof src === "object"
+    ? `<div class="case-inline-video${src.vertical ? " vert" : ""}"><video src="${src.video}" poster="${src.poster || ""}" controls playsinline preload="metadata"></video></div>`
+    : `<img src="${src}" alt="${c.name || p.title}: слайд ${i + 1}" loading="${i < 2 ? "eager" : "lazy"}" decoding="async">`).join("");
+  caseEl.hidden = false;
+  requestAnimationFrame(() => caseEl.classList.add("on"));
+  document.documentElement.classList.add("lock");
+  document.getElementById("caseScroll").scrollTop = 0;
+  if (location.hash !== "#" + p.id) history.replaceState(null, "", "#" + p.id);
+  document.getElementById("caseClose").focus({ preventScroll: true });
+}
+function closeCase() {
+  if (caseEl.hidden) return;
+  caseVideo.pause();
+  document.querySelectorAll("#caseSlides video").forEach(v => v.pause());
+  caseEl.classList.remove("on");
+  document.documentElement.classList.remove("lock");
+  setTimeout(() => { caseEl.hidden = true; if (caseVideo.getAttribute("src")) { caseVideo.removeAttribute("src"); caseVideo.load(); } }, 350);
+  history.replaceState(null, "", location.pathname + location.search);
+  lastFocus?.focus({ preventScroll: true });
+}
+document.getElementById("caseClose").addEventListener("click", closeCase);
+document.getElementById("caseBack").addEventListener("click", closeCase);
+caseEl.addEventListener("click", e => { if (e.target.id === "caseScroll") closeCase(); });
+addEventListener("keydown", e => { if (e.key === "Escape") closeCase(); });
+function caseById(id) {
+  for (const w of WORKS) {
+    if (w.case && w.id === id) return w;
+    for (const g of w.group || []) if (g.case && g.id === id) return g;
+  }
+}
+function caseFromHash() {
+  const p = location.hash.length > 1 && caseById(location.hash.slice(1));
+  if (p) openCase(p);
+}
+addEventListener("hashchange", caseFromHash);
+caseFromHash();
+
+/* ---------- Слайдер видео: персонаж доигрывает — и уезжает, приезжает следующий ---------- */
+clipSliders.forEach(st => {
+  const vids = [...st.querySelectorAll("video")], dots = [...st.querySelectorAll(".clip-dots i")];
+  const card = st.closest(".card");
+  let cur = 0, shown = false;
+  const play = v => { v.currentTime = 0; v.play().catch(() => {}); };
+  function next() {
+    const a = vids[cur]; cur = (cur + 1) % vids.length; const b = vids[cur];
+    a.classList.remove("on"); a.classList.add("out");
+    b.classList.remove("out"); b.classList.add("on");
+    setTimeout(() => a.classList.remove("out"), 900);
+    dots.forEach((d, i) => d.classList.toggle("on", i === cur));
+    play(b);
+  }
+  vids.forEach(v => v.addEventListener("ended", () => { if (v === vids[cur]) shown ? next() : null; }));
+  new IntersectionObserver(([e]) => {
+    shown = e.isIntersecting;
+    if (reduce) return;
+    if (shown) vids[cur].play().catch(() => {}); else vids.forEach(v => v.pause());
+  }, { rootMargin: "100px" }).observe(card);
+});
+
+/* Высота карточек: обычные — целое число «рядов», fit — точно по пропорции обложки */
+function layoutGrid() {
+  const cs = getComputedStyle(grid);
+  const row = parseFloat(cs.getPropertyValue("--row")) || 150;
+  const gap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--gap")) || 14;
+  const colW = (grid.clientWidth - gap * (cs.gridTemplateColumns.split(" ").length - 1)) / cs.gridTemplateColumns.split(" ").length;
+  grid.querySelectorAll(".card").forEach(c => {
+    let h;
+    if (c.dataset.fit) {
+      const wide = cs.gridTemplateColumns.split(" ").length > 1 && getComputedStyle(c).gridColumnEnd.includes("span 2");
+      h = (wide ? grid.clientWidth : colW) / parseFloat(c.dataset.fit);
+    } else {
+      const n = parseInt(getComputedStyle(c).getPropertyValue("--rows")) || 2;
+      h = n * row + (n - 1) * gap;
+    }
+    c.style.height = h + "px";
+    c.style.gridRow = `span ${Math.round((h + gap) / 2)}`;
+  });
+  // карточки с trim подрезаются так, чтобы низ совпал с низом соседней колонки (без пустоты)
+  if (cs.gridTemplateColumns.split(" ").length > 1) grid.querySelectorAll(".card[data-trim]:not(.hide)").forEach(c => {
+    const r = c.getBoundingClientRect();
+    let bottom = 0;
+    grid.querySelectorAll(".card:not(.hide)").forEach(o => {
+      if (o === c) return;
+      const q = o.getBoundingClientRect();
+      if (q.top >= r.top - 2 && q.top < r.bottom && (q.right <= r.left + 2 || q.left >= r.right - 2) && q.width < grid.clientWidth * .9) bottom = Math.max(bottom, q.bottom);
+    });
+    if (bottom > r.top + 200 && bottom < r.bottom) {
+      const h = bottom - r.top;
+      c.style.height = h + "px";
+      c.style.gridRow = `span ${Math.round((h + gap) / 2)}`;
+    }
+  });
+}
+addEventListener("resize", layoutGrid);
+layoutGrid();
+
+/* Фильтр */
+document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+  const f = b.dataset.f;
+  document.querySelectorAll(".card").forEach(c => c.classList.toggle("hide", f !== "all" && c.dataset.cat !== f));
+  layoutGrid();
+}));
+
+/* ---------- Игра ---------- */
+const field = document.getElementById("field");
+const statusEl = document.getElementById("status");
+const timerEl = document.getElementById("timer");
+const winEl = document.getElementById("win");
+let started = 0, found = false, tick = null, lastCols = 0;
+
+function newGame() {
+  field.innerHTML = ""; statusEl.textContent = ""; found = false;
+  field.classList.remove("done"); winEl.classList.remove("on");
+  // заполняем поле ровными рядами
+  const tile = innerWidth < 640 ? 50 : 66;
+  const cols = Math.max(4, Math.floor((field.clientWidth - 12 + 2) / tile));
+  const target = innerWidth < 640 ? 36 : GAME.count;
+  const count = Math.max(cols * 3, Math.round(target / cols) * cols);
+  const odd = Math.floor(Math.random() * count);
+  for (let i = 0; i < count; i++) {
+    const b = document.createElement("button");
+    const isOdd = i === odd;
+    b.setAttribute("aria-label", `Голова ${i + 1}`);
+    if (isOdd) b.dataset.odd = "1";
+    imgOr(b, isOdd ? GAME.odd : GAME.normal, "", faceSVG("plain", isOdd));
+    b.addEventListener("click", () => pick(b));
+    field.appendChild(b);
+  }
+  started = 0; timerEl.textContent = "0.0 сек";
+  clearInterval(tick);
+}
+function startClock() {
+  if (started || found) return;
+  started = performance.now();
+  tick = setInterval(() => timerEl.textContent = ((performance.now() - started) / 1000).toFixed(1) + " сек", 100);
+}
+function pick(b) {
+  if (found) return;
+  startClock();
+  if (b.dataset.odd) {
+    found = true; clearInterval(tick);
+    const t = (performance.now() - started) / 1000;
+    timerEl.textContent = t.toFixed(1) + " сек";
+    b.classList.add("yes"); field.classList.add("done");
+    let best = null;
+    try { best = parseFloat(localStorage.getItem("ve-best")); if (!best || t < best) { localStorage.setItem("ve-best", t); best = t; } } catch (e) {}
+    document.getElementById("winTime").textContent = `Нашлась за ${t.toFixed(1)} сек!`;
+    document.getElementById("winBest").textContent = best ? `Твой рекорд: ${best.toFixed(1)} сек` : "Подмигиваю в ответ 😉";
+    setTimeout(() => winEl.classList.add("on"), 500);
+    statusEl.textContent = "";
+  } else {
+    b.classList.remove("nope"); void b.offsetWidth; b.classList.add("nope");
+  }
+}
+
+field.addEventListener("pointerdown", startClock);
+field.addEventListener("pointerover", startClock);
+addEventListener("resize", () => {
+  const cols = getComputedStyle(field).gridTemplateColumns.split(" ").length;
+  if (!started && cols !== lastCols) { lastCols = cols; newGame(); }
+});
+
+field.addEventListener("keydown", e => {
+  const btns = [...field.children], i = btns.indexOf(document.activeElement);
+  if (i < 0) return;
+  const cols = getComputedStyle(field).gridTemplateColumns.split(" ").length;
+  const m = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: cols, ArrowUp: -cols }[e.key];
+  if (m) { e.preventDefault(); startClock(); btns[Math.max(0, Math.min(btns.length - 1, i + m))].focus(); }
+});
+document.getElementById("again").addEventListener("click", newGame);
+document.getElementById("again2").addEventListener("click", newGame);
+newGame();
+</script>
+</body>
+</html>

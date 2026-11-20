@@ -6,6 +6,7 @@
 <title>Виктория Евстафьева — дизайн и AI-контент</title>
 <meta name="description" content="Портфолио графического дизайнера и AI-креатора: интерфейсы, презентации, визуальные концепции, персонажи и AI-контент.">
 <meta name="theme-color" content="#f3f2ee">
+<script>try{if(localStorage.getItem("ve-theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -355,6 +356,41 @@ html.lock{overflow:hidden}
 .case-bh{background:#fff;color:var(--ink);border-radius:99px;padding:13px 22px;font-weight:700;font-size:15px}
 .case-back{background:var(--ink);color:#fff;border-radius:99px;padding:13px 22px;font-weight:700;font-size:15px}
 
+/* ============ ТОРШЕР И ТЁМНАЯ ТЕМА ============ */
+.brand-row{display:flex;align-items:center;gap:6px}
+.lamp{width:40px;height:52px;margin:-8px 0 -8px;display:grid;place-items:center;border-radius:14px;transition:background .2s}
+.lamp:hover{background:var(--bg)}
+.lamp svg{width:34px;height:46px;overflow:visible}
+.lamp .beam,.lamp .bulb{opacity:0;transition:opacity .45s ease}
+.lamp .shade{transition:filter .45s ease}
+.lamp .cord{transition:transform .25s var(--ease-pop);transform-origin:40px 26px}
+.lamp.pull .cord{transform:translateY(5px)}
+.lamp:hover .cord{animation:cordSwing 1.2s ease-in-out infinite}
+@keyframes cordSwing{50%{transform:rotate(8deg)}}
+html.dark .lamp .beam,html.dark .lamp .bulb{opacity:1}
+html.dark .lamp .shade{filter:drop-shadow(0 0 6px #ff9cc9) brightness(1.08)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0;transition:opacity .8s ease;background:radial-gradient(60vw 60vh at 62% 0%,rgba(255,140,195,.16),transparent 70%)}
+html.dark body::before{opacity:1}
+.page{position:relative;z-index:1}
+html.theme-anim *,html.theme-anim *::before,html.theme-anim *::after{transition:background-color .5s ease,color .5s ease,border-color .5s ease!important}
+
+html.dark{color-scheme:dark;--bg:#141215;--card:#1f1c21;--soft:#2b272d;--ink:#f4eff1;--muted:#a59ea8;--line:#36303a;--accent:#ff8fc0}
+html.dark .heads{background:var(--card)}
+html.dark .heads .tap{background:rgba(31,28,33,.8)}
+html.dark .hero-txt p,html.dark .about p,html.dark .exp .about p,html.dark .case-top p{color:#cfc8d2}
+html.dark .hero-txt h1 b,html.dark .logo b{color:var(--accent)}
+html.dark .tabs button.on,html.dark .case-x,html.dark .case-back,html.dark .game .again,html.dark .win-card button,html.dark .field button.nope::after{color:var(--bg)}
+html.dark .tabs .to-about{color:#2a0f1c}
+html.dark .cta{background:#2b1f27;color:#fff}
+html.dark .cta .btn{color:#1d1d1b}
+html.dark .cta h2 em{color:#ffb3d4}
+html.dark .exp .tl-ava{background:var(--soft)}
+html.dark .field{background:var(--card)}
+html.dark .field button{background:var(--soft)}
+html.dark .win-card,html.dark .case-tags span,html.dark .case-bh{background:var(--card);color:var(--ink)}
+html.dark .win-card span{color:var(--muted)}
+html.dark .case.on{background:rgba(0,0,0,.6)}
+
 /* ============ ИГРА ============ */
 .game{grid-column:1/-1;background:var(--card);border-radius:var(--r);padding:28px;margin-top:var(--gap)}
 .game-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
@@ -415,6 +451,7 @@ footer{grid-column:2;display:flex;justify-content:space-between;padding:22px 8px
   .topbar{flex-direction:column;align-items:stretch;padding:12px}
   .tabs{justify-content:space-between}
   .tabs button{flex:1;padding:9px 6px}
+  .topbar .brand-row{justify-content:space-between}
   .card .go{transform:none}
   .case-scroll{padding:10px 8px 24px}
   .case-panel{padding:18px;border-radius:24px}
@@ -474,7 +511,24 @@ footer{grid-column:2;display:flex;justify-content:space-between;padding:22px 8px
   <!-- ===================== РАБОТЫ ===================== -->
   <main class="main" id="work">
     <div class="topbar">
-      <a class="logo" href="#top">ve<b>.</b></a>
+      <div class="brand-row">
+        <a class="logo" href="#top">ve<b>.</b></a>
+        <button class="lamp" id="lamp" type="button" aria-pressed="false" aria-label="Включить торшер — тёмная тема" title="Дёрни за шнурок">
+          <svg viewBox="0 0 60 80" aria-hidden="true">
+            <defs>
+              <radialGradient id="lampGlow" cx="50%" cy="0%" r="100%"><stop offset="0" stop-color="#ffb8d9" stop-opacity=".9"/><stop offset="1" stop-color="#ffb8d9" stop-opacity="0"/></radialGradient>
+              <linearGradient id="shade" x1="0" x2="1"><stop offset="0" stop-color="#ff8fc0"/><stop offset=".55" stop-color="#ffb3d4"/><stop offset="1" stop-color="#f27aae"/></linearGradient>
+            </defs>
+            <path class="beam" d="M17 27 L3 74 L57 74 L43 27 Z" fill="url(#lampGlow)"/>
+            <rect x="28.6" y="25" width="2.8" height="45" rx="1.4" fill="#d9a6bd"/>
+            <ellipse cx="30" cy="73" rx="13" ry="3.6" fill="#f27aae"/>
+            <ellipse class="bulb" cx="30" cy="26" rx="6" ry="3" fill="#fff4f9"/>
+            <path class="shade" d="M18 4 Q30 1 42 4 L49 25 Q30 30 11 25 Z" fill="url(#shade)"/>
+            <path d="M18 4 Q30 1 42 4" stroke="#fff" stroke-opacity=".55" stroke-width="1.4" fill="none"/>
+            <g class="cord"><line x1="40" y1="26" x2="40" y2="40" stroke="#c58aa6" stroke-width="1.2"/><circle cx="40" cy="41.5" r="2.2" fill="#f27aae"/></g>
+          </svg>
+        </button>
+      </div>
       <div class="tabs" role="tablist">
         <button class="on" data-f="all">Все<sup>15</sup></button>
         <button data-f="design">Дизайн<sup>08</sup></button>
@@ -1122,6 +1176,23 @@ function layoutGrid() {
 }
 addEventListener("resize", layoutGrid);
 layoutGrid();
+
+/* ---------- Торшер: дёрнуть за шнурок — тёмная тема ---------- */
+const lamp = document.getElementById("lamp");
+function setTheme(dark, animate) {
+  const root = document.documentElement;
+  if (animate) { root.classList.add("theme-anim"); setTimeout(() => root.classList.remove("theme-anim"), 650); }
+  root.classList.toggle("dark", dark);
+  lamp.setAttribute("aria-pressed", dark);
+  lamp.setAttribute("aria-label", dark ? "Выключить торшер — светлая тема" : "Включить торшер — тёмная тема");
+  document.querySelector('meta[name="theme-color"]').setAttribute("content", dark ? "#141215" : "#f3f2ee");
+  try { localStorage.setItem("ve-theme", dark ? "dark" : "light"); } catch (e) {}
+}
+lamp.addEventListener("click", () => {
+  lamp.classList.add("pull"); setTimeout(() => lamp.classList.remove("pull"), 220);
+  setTheme(!document.documentElement.classList.contains("dark"), true);
+});
+try { if (localStorage.getItem("ve-theme") === "dark") setTheme(true, false); } catch (e) {}
 
 /* Фильтр */
 document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => {

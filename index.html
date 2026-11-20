@@ -123,8 +123,13 @@ img{display:block;max-width:100%}
 .tabs button.on{background:var(--ink);color:#fff}
 
 /* сетка из мелких строк по 2px: высоту каждой карточки считает скрипт (обычные — по --row, «fit» — по пропорции обложки) */
-.grid{--row:150px;display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:2px;grid-auto-flow:dense;column-gap:var(--gap);row-gap:0}
-.grid>.card{margin-bottom:var(--gap)}
+.grid{--row:150px;--wgap:var(--gap);display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:2px;grid-auto-flow:dense;column-gap:var(--wgap);row-gap:0}
+/* больше воздуха: на широких экранах — три колонки и шире промежутки */
+.grid.masonry{display:block;position:relative}
+.grid.masonry .grp-hint{top:auto;bottom:20px;left:24px;right:auto}
+.grid.masonry>.card{position:absolute;margin:0;transition:transform .45s var(--ease-pop),top .5s ease,left .5s ease}
+@media (min-width:1180px){.grid{--row:118px;--wgap:22px}.card h3{font-size:clamp(19px,1.55vw,26px)}.card p{font-size:12px}}
+.grid>.card{margin-bottom:var(--wgap)}
 .card{clip-path:inset(0 round var(--r));--rows:2;--c:#ddd;--fg:#1d1d1b;position:relative;border-radius:var(--r);background:var(--c);color:var(--fg);overflow:hidden;grid-row:span 2;display:block;isolation:isolate;transition:transform .45s var(--ease-pop),box-shadow .3s}
 .card.l{--rows:3}
 .card.w{grid-column:span 2;--rows:3}
@@ -767,7 +772,7 @@ const WORKS = [
     } },
   { cat:"design", title:"NEST", sub:"Концепция мобильного приложения", kind:"clips", size:"l", color:"#ffffff", url:"https://www.behance.net/gallery/256129933/NEST-is-a-mobile-app-concept-designed",
     clips:["assets/works/nest/nest-white.mp4"], media:[] },
-  { cat:"design", title:"Vivecto — раздел OEM", sub:"Веб-дизайн · калькулятор трафика", kind:"demo", size:"wt", color:"#ffffff", url:"https://www.behance.net/gallery/238968969/razdel-OEM-dlja-sajta-Vivecto",
+  { cat:"design", title:"Vivecto — раздел OEM", sub:"Веб-дизайн · калькулятор трафика", kind:"demo", size:"wt", mfit:1200/900, color:"#ffffff", url:"https://www.behance.net/gallery/238968969/razdel-OEM-dlja-sajta-Vivecto",
     video:"assets/works/vivecto/oem.mp4", w:1200, h:760, media:[] },
   { cat:"ai", title:"VERTEX Elevator Group", sub:"Концептуальная рекламная кампания", kind:"still", size:"l", fit:380/681, color:"#1a1a1a", fg:"#fff", w:380, h:681, cover:"assets/works/vertex/cover2.webp", fill:true, trim:true, id:"vertex", url:"https://www.behance.net/gallery/251567885/VERTEX-Elevator-Group-Fictional-Advertising-Campaign",
     case: {
@@ -781,7 +786,7 @@ const WORKS = [
       behance: "https://www.behance.net/gallery/251567885/VERTEX-Elevator-Group-Fictional-Advertising-Campaign",
     },
     media:[] },
-  { cat:"ai", title:"WANDERER", sub:"Вселенная игры · 2 проекта", kind:"reel", size:"w", color:"#141a24", fg:"#fff", video:"assets/works/wanderer/intro-preview.mp4", poster:"assets/works/wanderer/intro-poster.jpg",
+  { cat:"ai", title:"WANDERER", sub:"Вселенная игры · 2 проекта", kind:"reel", size:"w", mfit:4/4.2, color:"#141a24", fg:"#fff", video:"assets/works/wanderer/intro-preview.mp4", poster:"assets/works/wanderer/intro-poster.jpg",
     // карточка-папка: при наведении показывает проекты внутри
     group:[ { title:"Мир и персонажи", sub:"Концепт-арт", url:"https://www.behance.net/gallery/251904315/WANDERER-Character-Environment-Concept-Art",
               id:"wanderer-world", case:{ name:"WANDERER — мир и персонажи", lead:"Концепт игры про лиса-странника, хранителя Последнего фонаря: персонаж, фонарь и светлячки, зелья, ассеты и игровые сцены.", tags:["Концепт-арт", "Персонаж", "Геймдизайн"], long:true,
@@ -1108,6 +1113,7 @@ WORKS.forEach(p => {
   } else { a.href = p.url; a.target = "_blank"; a.rel = "noopener"; }
   if (p.kind === "video") a.classList.add("vid");
   if (p.fit) a.dataset.fit = p.fit;
+  if (p.mfit) a.dataset.mfit = p.mfit;
   if (p.trim) a.dataset.trim = 1;
   if (p.kind === "reel") a.classList.add("reel-card");
   if (p.kind === "cover") a.classList.add("cover");
@@ -1227,14 +1233,38 @@ clipSliders.forEach(st => {
 /* Высота карточек: обычные — целое число «рядов», fit — точно по пропорции обложки */
 function layoutGrid() {
   const cs = getComputedStyle(grid);
+  /* Широкий экран: «пинтерест»-раскладка в 3 колонки — каждая карточка встаёт в самую короткую колонку, дыр нет */
+  if (matchMedia("(min-width:1180px)").matches) {
+    grid.classList.add("masonry");
+    const gap = parseFloat(cs.getPropertyValue("--wgap")) || 22, cols = 3;
+    const colW = (grid.clientWidth - gap * (cols - 1)) / cols;
+    const row = parseFloat(cs.getPropertyValue("--row")) || 118;
+    const hs = new Array(cols).fill(0);
+    grid.querySelectorAll(".card").forEach(c => {
+      c.style.gridRow = "";
+      if (c.classList.contains("hide")) return;
+      let h;
+      if (c.dataset.mfit || c.dataset.fit) h = colW / parseFloat(c.dataset.mfit || c.dataset.fit);
+      else { const n = parseInt(getComputedStyle(c).getPropertyValue("--rows")) || 2; h = n * row + (n - 1) * gap; }
+      const k = hs.indexOf(Math.min(...hs));
+      c.style.width = colW + "px"; c.style.height = h + "px";
+      c.style.left = k * (colW + gap) + "px"; c.style.top = hs[k] + "px";
+      hs[k] += h + gap;
+    });
+    grid.style.height = Math.max(...hs) - gap + "px";
+    return;
+  }
+  grid.classList.remove("masonry"); grid.style.height = "";
+  grid.querySelectorAll(".card").forEach(c => { c.style.width = c.style.left = c.style.top = ""; });
   const row = parseFloat(cs.getPropertyValue("--row")) || 150;
-  const gap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--gap")) || 14;
-  const colW = (grid.clientWidth - gap * (cs.gridTemplateColumns.split(" ").length - 1)) / cs.gridTemplateColumns.split(" ").length;
+  const gap = parseFloat(cs.columnGap) || 14;
+  const cols = cs.gridTemplateColumns.split(" ").length;
+  const colW = (grid.clientWidth - gap * (cols - 1)) / cols;
   grid.querySelectorAll(".card").forEach(c => {
     let h;
     if (c.dataset.fit) {
       const wide = cs.gridTemplateColumns.split(" ").length > 1 && getComputedStyle(c).gridColumnEnd.includes("span 2");
-      h = (wide ? grid.clientWidth : colW) / parseFloat(c.dataset.fit);
+      h = (wide ? colW * 2 + gap : colW) / parseFloat(c.dataset.fit);
     } else {
       const n = parseInt(getComputedStyle(c).getPropertyValue("--rows")) || 2;
       h = n * row + (n - 1) * gap;

@@ -46,8 +46,7 @@ img{display:block;max-width:100%}
 .hero{padding:0;overflow:hidden;position:relative}
 .heads{position:relative;aspect-ratio:1/1;background:#fff;cursor:pointer;overflow:hidden;user-select:none;-webkit-tap-highlight-color:transparent}
 /* rig — поворачивается за курсором; .h — появляется/улетает; img — «дышит» */
-.heads .rig{position:absolute;inset:0;will-change:transform;display:flex;align-items:center;justify-content:center;padding:7% 8% 0}
-.heads .gaze{max-width:100%;max-height:100%;width:auto;height:100%;object-fit:contain;display:block;animation:breathe 4.2s ease-in-out infinite}
+.heads .rig{position:absolute;inset:0;will-change:transform}
 .heads .h{position:absolute;inset:9% 9% 5%;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none}
 .heads .h img,.heads .h svg{width:100%;height:100%;object-fit:contain}
 /* пролёт: голова влетает из-за одного края, зависает в центре и улетает за противоположный */
@@ -542,8 +541,10 @@ footer{grid-column:2;display:flex;justify-content:space-between;padding:22px 8px
   <!-- ===================== ЛЕВАЯ КОЛОНКА ===================== -->
   <aside class="side">
     <section class="box hero">
-      <div class="heads" id="heads">
-        <div class="rig" id="rig"><canvas class="gaze" id="gaze" role="img" aria-label="Виктория в рыцарском шлеме с логотипом Figma следит глазами за курсором"></canvas></div>
+      <div class="heads" id="heads" role="button" tabindex="0" aria-label="Сменить образ">
+        <div class="dots" id="dots"></div>
+        <div class="rig" id="rig"></div>
+        <span class="tap">клик — следующий образ</span>
       </div>
       <div class="hero-txt">
         <div class="role">Графический дизайнер & AI-креатор</div>
@@ -898,72 +899,69 @@ function imgOr(container, src, alt, fallbackHTML) {
   container.appendChild(img);
 }
 
-/* ---------- Главное фото: шлем, глаза следят за курсором ----------
-   9 кадров взгляда (c — прямо, u/d/l/r и диагонали). Область глаз плавно смешивается
-   между соседними кадрами, поэтому взгляд двигается без скачков. */
-const GAZE = { dir: "assets/hero-heads/gaze/", w: 760, h: 950, patch: [121.66, 376.84, 484, 207], eyes: [363, 482] };
+/* ---------- Головы слева ---------- */
 const headsEl = document.getElementById("heads");
 const rig = document.getElementById("rig");
-(function () {
-  const cv = document.getElementById("gaze"), ctx = cv.getContext("2d");
-  const pc = document.createElement("canvas"), pctx = pc.getContext("2d");
-  const names = ["ul", "u", "ur", "l", "c", "r", "dl", "d", "dr"]; // сетка 3×3 с точки зрения зрителя
-  const load = src => new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
-  Promise.all([load(GAZE.dir + "base.webp"), ...names.map(n => load(GAZE.dir + n + ".webp"))]).then(([base, ...pt]) => {
-    if (!base) { rig.innerHTML = faceSVG("helmet"); return; }
-    const dpr = Math.min(2, devicePixelRatio || 1);
-    cv.width = GAZE.w; cv.height = GAZE.h;
-    const [px, py, pw, ph] = GAZE.patch; pc.width = pw; pc.height = ph;
-    let gx = 0, gy = 0, tx = 0, ty = 0, last = 0, idleT = 0, drawn = "";
-    function draw() {
-      // билинейные веса по сетке 3×3, «заострённые», чтобы зрачки не двоились
-      const fx = gx + 1, fy = gy + 1, ix = Math.min(1, Math.floor(fx)), iy = Math.min(1, Math.floor(fy));
-      let ax = fx - ix, ay = fy - iy;
-      const sharp = v => v * v * (3 - 2 * v);
-      ax = sharp(sharp(sharp(ax))); ay = sharp(sharp(sharp(ay)));
-      const w = [[(1 - ax) * (1 - ay), ix, iy], [ax * (1 - ay), ix + 1, iy], [(1 - ax) * ay, ix, iy + 1], [ax * ay, ix + 1, iy + 1]];
-      const key = w.map(v => v[0].toFixed(3)).join() + ix + iy;
-      if (key === drawn) return; drawn = key;
-      pctx.globalCompositeOperation = "copy"; pctx.globalAlpha = 1; pctx.clearRect(0, 0, pw, ph);
-      pctx.globalCompositeOperation = "lighter";
-      w.forEach(([k, x, y]) => { const im = pt[y * 3 + x]; if (k > .002 && im) { pctx.globalAlpha = k; pctx.drawImage(im, 0, 0, pw, ph); } });
-      ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 1;
-      ctx.clearRect(0, 0, cv.width, cv.height);
-      ctx.drawImage(base, 0, 0, GAZE.w, GAZE.h);
-      ctx.drawImage(pc, px, py);
-    }
-    function aim(clientX, clientY) {
-      const r = cv.getBoundingClientRect(), k = r.width / GAZE.w;
-      const ex = r.left + GAZE.eyes[0] * k, ey = r.top + GAZE.eyes[1] * k;
-      const dx = clientX - ex, dy = clientY - ey;
-      // чем дальше курсор, тем сильнее взгляд в сторону (насыщается на ~45% ширины экрана)
-      // чувствительность от размера фото: смотрит в сторону уже при отходе на ~размер карточки
-      const reach = Math.max(220, r.width * .85);
-      tx = Math.max(-1, Math.min(1, dx / reach));
-      ty = Math.max(-1, Math.min(1, dy / reach));
-      last = performance.now();
-    }
-    addEventListener("pointermove", e => aim(e.clientX, e.clientY), { passive: true });
-    addEventListener("pointerdown", e => aim(e.clientX, e.clientY), { passive: true });
-    let rx = 0, ry = 0;
-    (function tick(now) {
-      // нет курсора (телефон) — сама спокойно оглядывается
-      if (now - last > 3500 && now > idleT) {
-        idleT = now + 1800 + Math.random() * 2200;
-        const r = Math.random();
-        tx = r < .35 ? 0 : (Math.random() * 2 - 1) * .9; ty = r < .35 ? 0 : (Math.random() * 2 - 1) * .6;
-      }
-      const sp = reduce ? 1 : .09;
-      gx += (tx - gx) * sp; gy += (ty - gy) * sp;
-      draw();
-      if (!reduce && matchMedia("(pointer:fine)").matches) {
-        rx += (gx - rx) * .06; ry += (gy - ry) * .06;
-        rig.style.transform = `translate(${rx * 8}px, ${ry * 5}px) rotate(${rx * 3}deg)`;
-      }
-      requestAnimationFrame(tick);
-    })(0);
+const dotsEl = document.getElementById("dots");
+const headNodes = HEADS.map((h, i) => {
+  const d = document.createElement("div");
+  d.className = "h";
+  imgOr(d, h.src, h.alt, faceSVG(h.look));
+  rig.appendChild(d);
+  dotsEl.appendChild(document.createElement("i"));
+  return d;
+});
+let headIdx = -1;
+/* маршруты пролёта: откуда влетает [x, y, поворот] — улетает в противоположную сторону */
+const ROUTES = [
+  [-130, -10, -25], [130, 15, 22], [-20, 125, -12], [110, -110, 28],
+  [-125, 60, -18], [20, -125, 14], [130, -40, 20], [-110, -105, -28],
+];
+let routeIdx = Math.floor(Math.random() * ROUTES.length);
+function showHead(n) {
+  const prev = headNodes[headIdx];
+  if (prev) {
+    // улетает туда, откуда пришла следующая — в противоположную сторону от своего входа
+    const [x, y, r] = ROUTES[routeIdx];
+    prev.style.setProperty("--tx", -x + "%"); prev.style.setProperty("--ty", -y + "%"); prev.style.setProperty("--tr", -r + "deg");
+    prev.classList.remove("on"); prev.classList.add("out");
+    setTimeout(() => prev.classList.remove("out"), 720);
+  }
+  headIdx = (n + HEADS.length) % HEADS.length;
+  const h = HEADS[headIdx];
+  routeIdx = (routeIdx + 1 + Math.floor(Math.random() * 3)) % ROUTES.length;
+  const [x, y, r] = ROUTES[routeIdx];
+  const d = headNodes[headIdx];
+  d.style.setProperty("--fx", x + "%"); d.style.setProperty("--fy", y + "%"); d.style.setProperty("--fr", r + "deg");
+  // следующая влетает, когда предыдущая уже почти скрылась
+  setTimeout(() => d.classList.add("on"), prev ? 380 : 0);
+  [...dotsEl.children].forEach((d, i) => d.classList.toggle("on", i === headIdx));
+}
+showHead(0);
+const HEAD_DELAY = 3200;
+let headTimer = reduce ? null : setInterval(() => showHead(headIdx + 1), HEAD_DELAY);
+function bumpHead() {
+  clearInterval(headTimer);
+  showHead(headIdx + 1);
+  if (!reduce) headTimer = setInterval(() => showHead(headIdx + 1), HEAD_DELAY);
+}
+headsEl.addEventListener("click", bumpHead);
+headsEl.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); bumpHead(); } });
+
+/* Голова поворачивается за курсором */
+if (!reduce && matchMedia("(pointer:fine)").matches) {
+  let tx = 0, ty = 0, cx = 0, cy = 0;
+  addEventListener("pointermove", e => {
+    const r = headsEl.getBoundingClientRect();
+    tx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (innerWidth / 2)));
+    ty = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (innerHeight / 2)));
   });
-})();
+  (function tick() {
+    cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
+    rig.style.transform = `translate(${cx * 14}px, ${cy * 8}px) rotate(${cx * 7}deg)`;
+    requestAnimationFrame(tick);
+  })();
+}
 
 /* Левая колонка: если она выше экрана — прилипает нижним краем */
 const side = document.querySelector(".side");

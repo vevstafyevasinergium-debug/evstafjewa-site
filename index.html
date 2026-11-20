@@ -236,13 +236,14 @@ img{display:block;max-width:100%}
 /* ============ КАРТОЧКА-ПАПКА (WANDERER) ============ */
 .card.group{cursor:default}
 .grp-hint{position:absolute;right:20px;top:24px;z-index:3;font-size:12px;font-weight:700;color:#fff;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border-radius:99px;padding:7px 12px;transition:opacity .3s}
-.grp{position:absolute;left:16px;right:16px;bottom:16px;z-index:5;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.grp a{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff;color:#17171b;border-radius:20px;padding:16px 18px;opacity:0;transform:translateY(24px) scale(.96);transition:transform .5s var(--ease-pop),opacity .3s,background .2s;transition-delay:calc(var(--i) * 70ms)}
-.grp a b{display:block;font-size:16px;letter-spacing:-.01em}
-.grp a small{display:block;font-size:12px;font-weight:600;color:#77756f;margin-top:2px}
-.grp a i{font-style:normal;width:36px;height:36px;flex:none;border-radius:99px;background:#17171b;color:#fff;display:grid;place-items:center;font-weight:700;transition:transform .3s var(--ease-pop)}
+.grp{position:absolute;left:12px;right:12px;bottom:12px;z-index:5;display:grid;grid-template-columns:1fr;gap:6px}
+.grp a{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff;color:#17171b;border-radius:14px;padding:9px 10px 9px 14px;opacity:0;transform:translateY(24px) scale(.96);transition:transform .5s var(--ease-pop),opacity .3s,background .2s;transition-delay:calc(var(--i) * 70ms)}
+.grp a b{display:block;font-size:13px;line-height:1.2;letter-spacing:-.01em}
+.grp a small{display:block;font-size:11px;font-weight:600;color:#77756f;margin-top:1px}
+.card .go svg,.grp a i svg{width:44%;height:44%}
+.grp a i{font-style:normal;width:30px;height:30px;flex:none;border-radius:99px;background:#17171b;color:#fff;display:grid;place-items:center;font-weight:700;transition:transform .3s var(--ease-pop)}
 .grp a:hover{background:#ffc6de}
-.grp a:hover i{transform:rotate(45deg)}
+.grp a:hover i{transform:translate(1px,-1px) scale(1.08)}
 .card.group:hover .grp a,.card.group:focus-within .grp a{opacity:1;transform:none}
 .card.group:hover .grp-hint,.card.group:focus-within .grp-hint{opacity:0}
 .card.group:hover{transform:none}
@@ -990,6 +991,7 @@ TIMELINE.forEach(t => {
 imgOr(document.getElementById("ctaHead"), "assets/game/wink-big.webp", "", faceSVG("plain", true));
 
 /* ---------- Работы ---------- */
+const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>';
 const grid = document.getElementById("grid");
 const featured = document.getElementById("featured");
 const loops = []; // компоненты, которые переключаются по таймеру
@@ -1124,8 +1126,8 @@ WORKS.forEach(p => {
   a.innerHTML = `<div class="card-head"><h3>${p.title}</h3><p>${p.sub}</p></div>` +
     (p.group
       ? `<span class="grp-hint" aria-hidden="true">${p.group.length} проекта · наведи</span><div class="grp">${p.group.map((g, i) =>
-          `<a href="${g.case ? "#" + g.id : g.url}"${g.case ? ` data-case="${g.id}"` : ` target="_blank" rel="noopener"`} style="--i:${i}"><span><b>${g.title}</b><small>${g.sub}</small></span><i>↗</i></a>`).join("")}</div>`
-      : `<span class="go" aria-hidden="true">${p.case ? "→" : "↗"}</span>`);
+          `<a href="${g.case ? "#" + g.id : g.url}"${g.case ? ` data-case="${g.id}"` : ` target="_blank" rel="noopener"`} style="--i:${i}"><span><b>${g.title}</b><small>${g.sub}</small></span><i>${ARROW}</i></a>`).join("")}</div>`
+      : `<span class="go" aria-hidden="true">${ARROW}</span>`);
   a.prepend(buildStage(p));
   (p.size === "full" ? featured : grid).appendChild(a);
 });

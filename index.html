@@ -358,7 +358,6 @@ html.lock{overflow:hidden}
 
 /* ============ ЛЕВАЯ КОЛОНКА ЦЕЛИКОМ В ЭКРАН (десктоп) ============ */
 @media (min-width:1021px){
-  .page{padding-right:38px}
   .side{height:calc(100vh - var(--gap) * 2);top:var(--gap)!important}
   .side>.hero{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
   .side .heads{aspect-ratio:auto;flex:1 1 auto;min-height:150px}
@@ -375,18 +374,29 @@ html.lock{overflow:hidden}
 }
 @media (min-width:1021px) and (max-height:760px){.side .hero-txt p{display:none}}
 
-/* ============ ПРОГРЕСС-ШНУРОК ТОРШЕРА ============ */
-.cordbar{position:fixed;top:0;right:4px;z-index:60;width:28px;height:100vh;pointer-events:none;transition:opacity .4s}
-.cordbar.hidden{opacity:0}
-.cordbar .rail{position:absolute;left:13px;top:0;width:2px;height:100%;background:repeating-linear-gradient(to bottom,rgba(242,122,174,.28) 0 6px,transparent 6px 10px)}
-.cordbar .fill{position:absolute;left:12px;top:0;width:4px;height:var(--p,0%);border-radius:0 0 4px 4px;background:linear-gradient(#ffb3d4,#f27aae);box-shadow:0 0 10px rgba(242,122,174,.6)}
-.cordbar .bob{position:absolute;left:0;top:var(--p,0%);width:28px;height:34px;translate:0 -2px;transform-origin:14px 0;animation:bobSwing 2.4s ease-in-out infinite}
-.cordbar .bob svg{width:28px;height:34px;display:block;filter:drop-shadow(0 4px 8px rgba(242,122,174,.45))}
-.cordbar .pct{position:absolute;right:30px;top:calc(var(--p,0%) + 6px);font-size:11px;font-weight:800;color:#f27aae;background:var(--card);border-radius:99px;padding:3px 7px;box-shadow:0 2px 10px rgba(0,0,0,.08);opacity:0;transition:opacity .3s}
-.cordbar.moving .pct{opacity:1}
-.cordbar.moving .bob{animation-duration:.7s}
-@keyframes bobSwing{0%,100%{rotate:-6deg}50%{rotate:6deg}}
-@media (max-width:640px){.cordbar{right:2px;scale:.8;transform-origin:top right}}
+/* ============ ПРОГРЕСС: БЕГУЩАЯ ТАКСА ============ */
+body{padding-bottom:40px}
+.walk{position:fixed;left:0;right:0;bottom:0;height:46px;z-index:60;pointer-events:none}
+.walk .track{position:absolute;left:12px;right:12px;bottom:8px;height:3px;border-radius:3px;background:repeating-linear-gradient(90deg,rgba(242,122,174,.35) 0 8px,transparent 8px 14px)}
+.walk .fill{position:absolute;left:12px;bottom:8px;height:3px;border-radius:3px;width:calc((100% - 24px) * var(--p,0));background:linear-gradient(90deg,#ffc6de,#f27aae);box-shadow:0 0 8px rgba(242,122,174,.5)}
+.walk .dog{position:absolute;bottom:9px;left:calc(12px + (100% - 24px - 64px) * var(--p,0));width:64px;height:34px}
+.walk .dog svg{width:64px;height:34px;display:block;overflow:visible;transition:transform .25s}
+.walk.back .dog svg{transform:scaleX(-1)}
+.walk .leg{transform-box:fill-box;transform-origin:50% 0}
+.walk.moving .leg.a{animation:legA .32s linear infinite}
+.walk.moving .leg.b{animation:legB .32s linear infinite}
+.walk.moving .body{animation:bounce .16s ease-in-out infinite alternate}
+.walk .tail{transform-box:fill-box;transform-origin:100% 100%;animation:wag .5s ease-in-out infinite alternate}
+.walk.moving .ear{animation:flap .16s ease-in-out infinite alternate}
+.walk .ear{transform-box:fill-box;transform-origin:50% 0}
+@keyframes legA{0%,100%{rotate:28deg}50%{rotate:-28deg}}
+@keyframes legB{0%,100%{rotate:-28deg}50%{rotate:28deg}}
+@keyframes bounce{to{translate:0 -1.5px}}
+@keyframes wag{from{rotate:-12deg}to{rotate:18deg}}
+@keyframes flap{to{rotate:14deg}}
+.walk .bubble{position:absolute;bottom:40px;left:calc(12px + (100% - 24px - 64px) * var(--p,0) + 56px);translate:-100% 0;font-size:11px;font-weight:800;color:#f27aae;background:var(--card);border-radius:99px;padding:3px 8px;box-shadow:0 2px 10px rgba(0,0,0,.1);opacity:0;transition:opacity .3s;white-space:nowrap}
+.walk.done .bubble{opacity:1}
+@media (prefers-reduced-motion:reduce){.walk .dog{transition:none}}
 
 /* ============ ТОРШЕР И ТЁМНАЯ ТЕМА ============ */
 .brand-row{display:flex;align-items:center;gap:6px}
@@ -627,10 +637,25 @@ footer{grid-column:2;display:flex;justify-content:space-between;padding:22px 8px
     <footer class="foot"><span>© 2026 Виктория Евстафьева</span><a href="#top">Наверх ↑</a></footer>
 </div>
 
-<div class="cordbar hidden" id="cordbar" aria-hidden="true">
-  <i class="rail"></i><i class="fill"></i>
-  <div class="bob"><svg viewBox="0 0 28 34"><line x1="14" y1="0" x2="14" y2="10" stroke="#f27aae" stroke-width="2"/><path d="M5 26 Q14 9 23 26 Z" fill="#ff9cc8"/><path d="M8 24 Q14 13 20 24" stroke="#fff" stroke-opacity=".5" stroke-width="1.2" fill="none"/><ellipse cx="14" cy="27" rx="5" ry="2.4" fill="#fff4f9"/><circle cx="14" cy="10" r="2.6" fill="#f27aae"/></svg></div>
-  <span class="pct">0%</span>
+<div class="walk" id="walk" aria-hidden="true">
+  <i class="track"></i><i class="fill"></i>
+  <div class="dog"><svg viewBox="0 0 64 34">
+    <g class="tail"><path d="M10 15 Q3 10 4 4" stroke="#f27aae" stroke-width="3" stroke-linecap="round" fill="none"/></g>
+    <g class="leg b"><rect x="13" y="20" width="4" height="10" rx="2" fill="#e8649e"/></g>
+    <g class="leg a"><rect x="41" y="20" width="4" height="10" rx="2" fill="#e8649e"/></g>
+    <g class="body">
+      <rect x="8" y="11" width="42" height="13" rx="6.5" fill="#ff9cc8"/>
+      <rect x="20" y="13" width="14" height="9" rx="4" fill="#ffd0e4"/>
+      <path d="M44 13 Q48 3 56 6 Q62 9 60 15 Q58 19 51 18 Z" fill="#ff9cc8"/>
+      <circle cx="61" cy="14" r="2" fill="#4a2335"/>
+      <circle cx="54" cy="10" r="1.4" fill="#4a2335"/>
+      <g class="ear"><path d="M47 7 Q44 6 44 15 Q47 17 49 11 Z" fill="#e8649e"/></g>
+      <path d="M44 13 Q47 21 50 16" stroke="#7a5ea8" stroke-width="2" fill="none"/>
+    </g>
+    <g class="leg a"><rect x="17" y="20" width="4" height="10" rx="2" fill="#ff9cc8"/></g>
+    <g class="leg b"><rect x="45" y="20" width="4" height="10" rx="2" fill="#ff9cc8"/></g>
+  </svg></div>
+  <span class="bubble">Гав! Это конец 🐾</span>
 </div>
 
 <div class="case" id="case" role="dialog" aria-modal="true" aria-labelledby="caseTitle" hidden>
@@ -1232,23 +1257,23 @@ lamp.addEventListener("click", () => {
 });
 try { if (localStorage.getItem("ve-theme") === "dark") setTheme(true, false); } catch (e) {}
 
-/* ---------- Прогресс-шнурок: сколько работ пролистано ---------- */
+/* ---------- Прогресс: такса бежит, пока листаешь всю страницу ---------- */
 (function () {
-  const bar = document.getElementById("cordbar"), pct = bar.querySelector(".pct"), work = document.getElementById("grid");
-  let t = null, raf = 0;
+  const w = document.getElementById("walk");
+  let last = scrollY, t = null, raf = 0;
   function upd() {
     raf = 0;
-    const r = work.getBoundingClientRect(), vh = innerHeight;
-    const p = Math.min(1, Math.max(0, (vh * .5 - r.top) / Math.max(1, r.height - vh * .5)));
-    bar.style.setProperty("--p", (p * 82).toFixed(2) + "%");
-    pct.textContent = Math.round(p * 100) + "%";
-    bar.classList.toggle("hidden", r.bottom < vh * .2 || r.top > vh * .6);
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+    w.style.setProperty("--p", p.toFixed(4));
+    w.classList.toggle("done", p > .995);
   }
   addEventListener("scroll", () => {
+    w.classList.toggle("back", scrollY < last); last = scrollY;
     if (!raf) raf = requestAnimationFrame(upd);
-    bar.classList.add("moving"); clearTimeout(t); t = setTimeout(() => bar.classList.remove("moving"), 700);
+    w.classList.add("moving"); clearTimeout(t); t = setTimeout(() => w.classList.remove("moving"), 180);
   }, { passive: true });
-  addEventListener("resize", upd); upd();
+  addEventListener("resize", upd); new ResizeObserver(upd).observe(document.body); upd();
 })();
 
 /* Фильтр */

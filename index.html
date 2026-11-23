@@ -48,7 +48,8 @@ img{display:block;max-width:100%}
    Нижние 15.56% снимка — «полка» того же цвета, что и блок с текстом под ней. */
 .heads{--ledge:#eeece9}
 .heads:has(.hero-photo){cursor:default;background:linear-gradient(to top,var(--ledge) 15.56%,#fff 15.56%)}
-.hero-photo{position:absolute;bottom:0;left:50%;height:100%;width:auto;max-width:none;translate:-50% 0}
+/* фото всегда на всю ширину: по бокам руки уходят за край, лишнее срезается только сверху (там белый фон) */
+.hero-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 100%}
 .hero:has(.hero-photo) .hero-txt{background:#eeece9}
 .heads{position:relative;aspect-ratio:900/985;background:#fff;cursor:pointer;overflow:hidden;user-select:none;-webkit-tap-highlight-color:transparent}
 /* rig — поворачивается за курсором; .h — появляется/улетает; img — «дышит» */
@@ -372,9 +373,9 @@ html.lock{overflow:hidden}
 
 /* ============ ЛЕВАЯ КОЛОНКА ЦЕЛИКОМ В ЭКРАН (десктоп) ============ */
 @media (min-width:1021px){
-  .side{height:calc(100vh - var(--gap) * 2);top:var(--gap)!important}
-  .side>.hero{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
-  .side .heads{aspect-ratio:auto;flex:1 1 auto;min-height:150px}
+  .side{min-height:calc(100vh - var(--gap) * 2)}
+  .side>.hero{flex:1 1 auto;display:flex;flex-direction:column}
+  .side .heads{aspect-ratio:auto;flex:1 1 auto;min-height:395px}
   .side .hero-txt{padding:16px 22px 18px}
   .side .hero-txt h1{font-size:clamp(24px,3.4vh,34px);margin:4px 0 8px}
   .side .hero-txt p{font-size:14px}
@@ -514,14 +515,12 @@ footer{grid-column:2;display:flex;justify-content:space-between;padding:22px 8px
   .side>.hero{order:1}.side>.links{order:2}.main{order:2}
   footer{grid-column:auto;order:5}
   .hero{display:block}
-  .heads{aspect-ratio:auto;height:600px}
-  .hero-photo{-webkit-mask-image:linear-gradient(to right,transparent,#000 16%,#000 84%,transparent);mask-image:linear-gradient(to right,transparent,#000 16%,#000 84%,transparent)}
+  .heads{aspect-ratio:900/880;height:auto}
 }
 @media (max-width:640px){
   :root{--r:24px;--gap:10px}
   .hero{grid-template-columns:1fr}
   .heads{aspect-ratio:900/985;height:auto}
-  .hero-photo{-webkit-mask-image:none;mask-image:none}
   .grid{grid-template-columns:1fr;--row:130px}
   .field{grid-template-columns:repeat(auto-fill,minmax(48px,1fr))}
   .game{padding:20px}
